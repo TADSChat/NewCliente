@@ -33,16 +33,20 @@ public class Login extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private InterfaceServidor conexaoCliente;
+	private static InterfaceServidor conexaoCliente;
+	private static EntidadeUsuario meuUsuario;
 	private JPanel contentPane;
 	private JTextField field_email;
 	private JTextField field_servidor;
+	
 	private JNumberField field_porta;
 	private JPasswordField field_senha;
-
-	private EntidadeUsuario meuUsuario;
+	
 	private Registry registry;
 	private Dimension dimensaoTela = Toolkit.getDefaultToolkit().getScreenSize();
+	
+
+
 
 	/**
 	 * Create the frame.
@@ -51,7 +55,7 @@ public class Login extends JFrame {
 		setVisible(true);
 		setTitle("TadsZap");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(450, 600);
+		setSize(200, 500);
 		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
 
 		contentPane = new JPanel();
@@ -177,24 +181,24 @@ public class Login extends JFrame {
 
 	protected void conectar() {
 		EntidadeUsuario user = new EntidadeUsuario();
-		meuUsuario = new EntidadeUsuario();
 
 		String ipServidor = field_servidor.getText();
 		Integer portaServidor = field_porta.getNumber();
 
-		meuUsuario.setEmail(field_email.getText()).setSenha(String.valueOf(field_senha.getPassword()));
+		user.setEmail(field_email.getText()).setSenha(String.valueOf(field_senha.getPassword()));
 
 		try {
 			registry = LocateRegistry.getRegistry(ipServidor, Integer.valueOf(portaServidor));
 			conexaoCliente = (InterfaceServidor) registry.lookup(InterfaceServidor.NOME);
 
-			user = conexaoCliente.conectarChat(meuUsuario, new Usuario());
+			meuUsuario = conexaoCliente.conectarChat(user, new Usuario());
 
-			if (user == null) {
+			if (meuUsuario == null) {
 				JOptionPane.showMessageDialog(null, "Usuario invalido!");
 				return;
 			} else {
-				new Principal(meuUsuario);
+				System.out.println(meuUsuario);
+				new Principal();
 				dispose();
 			}
 
@@ -207,5 +211,20 @@ public class Login extends JFrame {
 
 		}
 	}
+	public static InterfaceServidor getConexaoCliente() {
+		return conexaoCliente;
+	}
 
+	public static void setConexaoCliente(InterfaceServidor conexaoCliente) {
+		Login.conexaoCliente = conexaoCliente;
+	}
+
+	public static EntidadeUsuario getMeuUsuario() {
+		return meuUsuario;
+	}
+
+	public static void setMeuUsuario(EntidadeUsuario meuUsuario) {
+		Login.meuUsuario = meuUsuario;
+	}
+	
 }

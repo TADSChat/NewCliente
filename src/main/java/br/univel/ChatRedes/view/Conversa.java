@@ -39,7 +39,6 @@ public class Conversa extends JPanel {
 	 * Create the panel.
 	 */
 	public Conversa(EntidadeUsuario user) {
-
 		setUser(user);
 
 		GridBagLayout gridBagLayout = new GridBagLayout();
@@ -98,7 +97,7 @@ public class Conversa extends JPanel {
 	public void mostrar(EntidadeUsuario remetente, String mensagem) {
 
 		Date data = new Date();
-		field_area.append(sdf.format(data) + " - " + remetente.getNome() + ": " + mensagem);
+		field_area.append(sdf.format(data) + " - " + remetente.getNome() + ": " + mensagem+"\n");
 
 	}
 
@@ -106,8 +105,8 @@ public class Conversa extends JPanel {
 
 		Date data = new Date();
 		String mensagem = field_envia_msg.getText();
-		Principal.enviaMsg(mensagem);
-		field_area.append(sdf.format(data) + " - " + user.getNome() + ": " + mensagem);
+		Principal.enviaMsg(user,mensagem);
+		field_area.append(sdf.format(data) + " - " + Principal.getUsuario().getEmail() + ": " + mensagem+"\n");
 
 	}
 

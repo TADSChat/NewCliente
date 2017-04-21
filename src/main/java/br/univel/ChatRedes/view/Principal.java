@@ -40,20 +40,29 @@ public class Principal extends JFrame {
 	private JPanel contentPane;
 	private InterfaceServidor conexaoCliente;
 	private JTextField field_pesquisa_contato;
-	private JTabbedPane tabbedConversas;
-	private EntidadeUsuario usuario;
+	private static JTabbedPane tabbedConversas;
+	private static EntidadeUsuario usuario;
+
+	public static EntidadeUsuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(EntidadeUsuario usuario) {
+		this.usuario = usuario;
+	}
 
 	private static JList<EntidadeUsuario> listaUsuarios;
 	private static Principal global;
 
-	public Principal(EntidadeUsuario usuario) {
+	public Principal() {
 
+		this.conexaoCliente = Login.getConexaoCliente();
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("TadsZap");
 		setBounds(100, 100, 350, 600);
 
-		this.usuario = usuario;
+		setUsuario(Login.getMeuUsuario());
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -124,7 +133,10 @@ public class Principal extends JFrame {
 		CBStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
+					System.out.println("TESTE 01");
 					usuario.setStatus(Status.valueOf(CBStatus.getSelectedItem().toString()));
+					System.out.println("TESTE 02 " + usuario.getStatus());
+					System.out.println(Login.getMeuUsuario());
 					conexaoCliente.atualizarStatus(usuario);
 				} catch (RemoteException e) {
 					e.printStackTrace();
@@ -165,7 +177,7 @@ public class Principal extends JFrame {
 
 		listaUsuarios = new JList<EntidadeUsuario>();
 		listaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	
+
 		GridBagConstraints gbc_listaUsuarios = new GridBagConstraints();
 		gbc_listaUsuarios.gridwidth = 2;
 		gbc_listaUsuarios.insets = new Insets(0, 0, 5, 5);
@@ -213,8 +225,8 @@ public class Principal extends JFrame {
 		global.enviarArquivo(arquivo);
 	}
 
-	public static void enviaMsg(String msg) {
-		global.enviarMensagem(msg);
+	public static void enviaMsg(EntidadeUsuario remetente, String msg) {
+		global.enviarMensagem(remetente,msg);
 	}
 
 	public void enviarArquivo(Arquivo arquivo) {
@@ -237,17 +249,11 @@ public class Principal extends JFrame {
 		// }
 	}
 
-	public void enviarMensagem(String mensagem) {
+	public void enviarMensagem(EntidadeUsuario destinatario, String mensagem) {
 
-		String titleAt = tabbedConversas.getTitleAt(tabbedConversas.getSelectedIndex());
 
 		try {
-
-			EntidadeUsuario destinatario = new EntidadeUsuario();
-			destinatario.setNome(titleAt);
 			conexaoCliente.enviarMensagem(usuario, destinatario, mensagem);
-			System.out.println(titleAt + " enviou:  " + mensagem);
-
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -255,7 +261,7 @@ public class Principal extends JFrame {
 
 	}
 
-	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
+	public static void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
 		int totaltabs = tabbedConversas.getTabCount();
 		boolean ativo = false;
 		if (totaltabs != 0) {
@@ -275,7 +281,7 @@ public class Principal extends JFrame {
 
 		if (!ativo) {
 
-			Conversa conversa = new Conversa(usuario);
+			Conversa conversa = new Conversa(remetente);
 			tabbedConversas.add(remetente.getNome(), conversa);
 			conversa.mostrar(remetente, mensagem);
 

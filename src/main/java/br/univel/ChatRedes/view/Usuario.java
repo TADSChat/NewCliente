@@ -9,6 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 
 import br.univel.ChatRedes.comum.MeuModelo;
 import common.Arquivo;
@@ -51,8 +52,9 @@ public class Usuario implements InterfaceUsuario {
 
 	@Override
 	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		// TODO Auto-generated method stub
-
+		System.out.println(remetente.getNome() +"=" +mensagem);
+		
+		Principal.receberMensagem(remetente, mensagem);
 	}
 
 	@Override
@@ -66,7 +68,7 @@ public class Usuario implements InterfaceUsuario {
 		System.out.println("recebi a lista: " + lista.size());
 
 		DefaultListModel<EntidadeUsuario> modelo = new MeuModelo(lista);
-		
+
 		lista.forEach(usuario -> {
 			System.out.println("adicionando usuario " + usuario.getNome());
 			if (!modelo.contains(usuario)) {
