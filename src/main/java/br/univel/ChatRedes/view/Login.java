@@ -1,9 +1,11 @@
 package br.univel.ChatRedes.view;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.registry.LocateRegistry;
@@ -30,13 +32,17 @@ public class Login extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private InterfaceServidor conexaoCliente;
 	private JPanel contentPane;
 	private JTextField field_email;
 	private JTextField field_servidor;
-	private JTextField field_porta;
+	private JNumberField field_porta;
 	private JPasswordField field_senha;
-	private JTextField field_nome;
-	private static EntidadeUsuario meuUsuario;
+
+	private EntidadeUsuario meuUsuario;
+	private Registry registry;
+	private Dimension dimensaoTela = Toolkit.getDefaultToolkit().getScreenSize();
 
 	/**
 	 * Create the frame.
@@ -45,7 +51,9 @@ public class Login extends JFrame {
 		setVisible(true);
 		setTitle("TadsZap");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 250, 350);
+		setSize(450, 600);
+		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
+
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -65,24 +73,6 @@ public class Login extends JFrame {
 		gbc_lblNewLabel.gridx = 1;
 		gbc_lblNewLabel.gridy = 0;
 		contentPane.add(lblNewLabel, gbc_lblNewLabel);
-
-		JLabel lblNome = new JLabel("Nome");
-		GridBagConstraints gbc_lblNome = new GridBagConstraints();
-		gbc_lblNome.anchor = GridBagConstraints.WEST;
-		gbc_lblNome.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNome.gridx = 0;
-		gbc_lblNome.gridy = 1;
-		contentPane.add(lblNome, gbc_lblNome);
-
-		field_nome = new JTextField();
-		GridBagConstraints gbc_field_nome = new GridBagConstraints();
-		gbc_field_nome.fill = GridBagConstraints.HORIZONTAL;
-		gbc_field_nome.gridwidth = 4;
-		gbc_field_nome.insets = new Insets(0, 0, 5, 0);
-		gbc_field_nome.gridx = 0;
-		gbc_field_nome.gridy = 2;
-		contentPane.add(field_nome, gbc_field_nome);
-		field_nome.setColumns(10);
 
 		JLabel lblEmail = new JLabel("Email:");
 		GridBagConstraints gbc_lblEmail = new GridBagConstraints();
@@ -145,7 +135,7 @@ public class Login extends JFrame {
 		gbc_lblSenha_1.gridy = 9;
 		contentPane.add(lblSenha_1, gbc_lblSenha_1);
 
-		field_porta = new JTextField();
+		field_porta = new JNumberField();
 		GridBagConstraints gbc_field_porta = new GridBagConstraints();
 		gbc_field_porta.insets = new Insets(0, 0, 5, 0);
 		gbc_field_porta.fill = GridBagConstraints.HORIZONTAL;
@@ -174,7 +164,7 @@ public class Login extends JFrame {
 		JButton btnSair = new JButton("Sair");
 		btnSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				dispose();
+				System.exit(0);
 			}
 		});
 		GridBagConstraints gbc_btnSair = new GridBagConstraints();
@@ -186,15 +176,36 @@ public class Login extends JFrame {
 	}
 
 	protected void conectar() {
-		
+		EntidadeUsuario user = new EntidadeUsuario();
 		meuUsuario = new EntidadeUsuario();
-		
-		String email = field_email.getText();
-		String senha = field_senha.getPassword().toString();
-		meuUsuario.setEmail(email);
-		meuUsuario.setSenha(senha);
-		
-		new Principal(meuUsuario, field_porta.getText(), field_servidor.getText());
+
+		String ipServidor = field_servidor.getText();
+		Integer portaServidor = field_porta.getNumber();
+
+		meuUsuario.setEmail(field_email.getText()).setSenha(String.valueOf(field_senha.getPassword()));
+
+		try {
+			registry = LocateRegistry.getRegistry(ipServidor, Integer.valueOf(portaServidor));
+			conexaoCliente = (InterfaceServidor) registry.lookup(InterfaceServidor.NOME);
+
+			user = conexaoCliente.conectarChat(meuUsuario, new Usuario());
+
+			if (user == null) {
+				JOptionPane.showMessageDialog(null, "Usuario invalido!");
+				return;
+			} else {
+				new Principal(meuUsuario);
+				dispose();
+			}
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"                   - ERRO -\n                             "
+							+ "- Verifique se o IP e PORTA estão corretos.\n             "
+							+ "- Verifique se não há bloqueio de FIREWALL ou ANTIVIRUS.\n" + "\n\n");
+
+		}
 	}
 
 }

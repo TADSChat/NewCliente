@@ -6,41 +6,32 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.TableModel;
 
 import br.univel.ChatRedes.comum.MeuModelo;
 import common.Arquivo;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
-import common.InterfaceUsuario;
 import common.Status;
-import javax.swing.JComboBox;
 
-public class Principal extends JFrame implements InterfaceUsuario {
+public class Principal extends JFrame {
 
 	/**
 	 * 
@@ -49,51 +40,20 @@ public class Principal extends JFrame implements InterfaceUsuario {
 	private JPanel contentPane;
 	private InterfaceServidor conexaoCliente;
 	private JTextField field_pesquisa_contato;
-	private JTable tableContatos;
 	private JTabbedPane tabbedConversas;
-	private EntidadeUsuario user;
-	private Registry registry;
+	private EntidadeUsuario usuario;
+
+	private static JList<EntidadeUsuario> listaUsuarios;
 	private static Principal global;
 
-	/**
-	 * Create the frame.
-	 * 
-	 * @param nome
-	 * @param string4
-	 * @param string3
-	 * @param string2
-	 * @param string
-	 */
-	public Principal(EntidadeUsuario usuario, String porta, String serv) {
-		this.user = usuario;
+	public Principal(EntidadeUsuario usuario) {
 
-		try {
-			System.out.println(porta + " - " + serv);
-
-			System.out.println("1");
-			registry = LocateRegistry.getRegistry(serv, Integer.valueOf(porta));
-			System.out.println("2");
-			conexaoCliente = (InterfaceServidor) registry.lookup(InterfaceServidor.NOME);
-			System.out.println("3");
-
-			// System.out.println(usuario.getEmail() + "--"+
-			// usuario.getSenha());
-			conexaoCliente.desconectarChat(user);
-			user = conexaoCliente.conectarChat(user, new Teste());
-			System.out.println("4");
-			// System.out.println("TESTE 01");
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(null,
-					"                   - ERRO -\n                             "
-							+ "- Verifique se o IP e PORTA estão corretos.\n             "
-							+ "- Verifique se não há bloqueio de FIREWALL ou ANTIVIRUS.\n" + "\n\n");
-
-		}
-
+		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("TadsZap");
 		setBounds(100, 100, 350, 600);
+
+		this.usuario = usuario;
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -104,9 +64,7 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		JMenuItem mntmTransissao = new JMenuItem("Transmissão");
 		mntmTransissao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-
-				enviarTransmissao();
-
+				new Transmissao(conexaoCliente, usuario).setVisible(true);
 			}
 		});
 		mnConexo.add(mntmTransissao);
@@ -118,9 +76,8 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		mntmSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					conexaoCliente.desconectarChat(user);
+					conexaoCliente.desconectarChat(usuario);
 				} catch (RemoteException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
@@ -153,7 +110,7 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
-		JLabel lblNomeLogado = new JLabel(user.getNome());
+		JLabel lblNomeLogado = new JLabel(usuario.getNome());
 		lblNomeLogado.setFont(new Font("Tahoma", Font.PLAIN, 21));
 		GridBagConstraints gbc_lblNomeLogado = new GridBagConstraints();
 		gbc_lblNomeLogado.insets = new Insets(0, 0, 5, 0);
@@ -167,10 +124,9 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		CBStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					user.setStatus(Status.valueOf(CBStatus.getSelectedItem().toString()));
-					conexaoCliente.atualizarStatus(user);
+					usuario.setStatus(Status.valueOf(CBStatus.getSelectedItem().toString()));
+					conexaoCliente.atualizarStatus(usuario);
 				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -207,32 +163,16 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		gbl_panel_2.rowWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		panel_2.setLayout(gbl_panel_2);
 
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.gridwidth = 2;
-		gbc_scrollPane_1.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 0;
-		panel_2.add(scrollPane_1, gbc_scrollPane_1);
-
-		tableContatos = new JTable();
-		tableContatos.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2) {
-					EntidadeUsuario usuario = new EntidadeUsuario();
-
-					int linha = tableContatos.getSelectedRow();
-
-					usuario.setNome(tableContatos.getValueAt(linha, 0).toString());
-					usuario.setStatus(Status.valueOf(tableContatos.getValueAt(linha, 1).toString()));
-
-					tabbedConversas.add(usuario.getNome(), new Conversa(usuario));
-				}
-			}
-		});
-		scrollPane_1.setViewportView(tableContatos);
+		listaUsuarios = new JList<EntidadeUsuario>();
+		listaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	
+		GridBagConstraints gbc_listaUsuarios = new GridBagConstraints();
+		gbc_listaUsuarios.gridwidth = 2;
+		gbc_listaUsuarios.insets = new Insets(0, 0, 5, 5);
+		gbc_listaUsuarios.fill = GridBagConstraints.BOTH;
+		gbc_listaUsuarios.gridx = 0;
+		gbc_listaUsuarios.gridy = 0;
+		panel_2.add(listaUsuarios, gbc_listaUsuarios);
 
 		field_pesquisa_contato = new JTextField();
 		GridBagConstraints gbc_field_pesquisa_contato = new GridBagConstraints();
@@ -266,6 +206,7 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		panel_3.add(tabbedConversas, gbc_tabbedPane_1);
 
 		global = this;
+
 	}
 
 	public static void enviaArq(Arquivo arquivo) {
@@ -276,27 +217,24 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		global.enviarMensagem(msg);
 	}
 
-	public void enviarTransmissao() {
-		new Transmissao(conexaoCliente, global.user).setVisible(true);
-		;
-	}
-
 	public void enviarArquivo(Arquivo arquivo) {
-//		String titleAt = tabbedConversas.getTitleAt(tabbedConversas.getSelectedIndex());
-//
-//		try {
-//			if (titleAt.equals("Público")) {
-//				JOptionPane.showMessageDialog(null, "Voçe não pode enviar arquivo para todos");
-//			} else {
-//				EntidadeUsuario destinatario = new EntidadeUsuario();
-//				destinatario.setNome(titleAt);
-////				conexaoCliente.enviarArquivo(user, destinatario, arquivo);
-//			}
-//
-//		} catch (RemoteException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		// String titleAt =
+		// tabbedConversas.getTitleAt(tabbedConversas.getSelectedIndex());
+		//
+		// try {
+		// if (titleAt.equals("Público")) {
+		// JOptionPane.showMessageDialog(null, "Voçe não pode enviar arquivo
+		// para todos");
+		// } else {
+		// EntidadeUsuario destinatario = new EntidadeUsuario();
+		// destinatario.setNome(titleAt);
+		//// conexaoCliente.enviarArquivo(user, destinatario, arquivo);
+		// }
+		//
+		// } catch (RemoteException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 	}
 
 	public void enviarMensagem(String mensagem) {
@@ -307,31 +245,13 @@ public class Principal extends JFrame implements InterfaceUsuario {
 
 			EntidadeUsuario destinatario = new EntidadeUsuario();
 			destinatario.setNome(titleAt);
-			conexaoCliente.enviarMensagem(user, destinatario, mensagem);
+			conexaoCliente.enviarMensagem(usuario, destinatario, mensagem);
 			System.out.println(titleAt + " enviou:  " + mensagem);
 
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	}
-
-	public void receberContatosOnline(List<EntidadeUsuario> lista) throws RemoteException {
-		List<EntidadeUsuario> listaOnline = new ArrayList<>();
-
-		lista.forEach(e -> {
-			if (!e.getStatus().equals(Status.OFFLINE)) {
-				listaOnline.add(e);
-			}
-		});
-
-		TableModel tb = new MeuModelo(listaOnline);
-		tableContatos.setModel(tb);
-
-	}
-
-	public void receberListaParticipantes(ArrayList<EntidadeUsuario> lista) throws RemoteException {
 
 	}
 
@@ -355,15 +275,17 @@ public class Principal extends JFrame implements InterfaceUsuario {
 
 		if (!ativo) {
 
-			Conversa conversa = new Conversa(user);
+			Conversa conversa = new Conversa(usuario);
 			tabbedConversas.add(remetente.getNome(), conversa);
 			conversa.mostrar(remetente, mensagem);
 
 		}
 	}
 
-	@Override
-	public void receberArquivo(EntidadeUsuario remetente, Arquivo arquivo) throws RemoteException {
-		new FileTransfer(remetente, arquivo);
+	/**
+	 * @return the listaUsuarios
+	 */
+	public static JList<EntidadeUsuario> getListaUsuarios() {
+		return listaUsuarios;
 	}
 }
