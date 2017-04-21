@@ -52,7 +52,7 @@ public class Principal extends JFrame implements InterfaceUsuario {
 	private JTable tableContatos;
 	private JTabbedPane tabbedConversas;
 	private EntidadeUsuario user;
-
+	private Registry registry;
 	private static Principal global;
 
 	/**
@@ -64,17 +64,33 @@ public class Principal extends JFrame implements InterfaceUsuario {
 	 * @param string2
 	 * @param string
 	 */
-	public Principal(EntidadeUsuario usuario, InterfaceServidor con) {
+	public Principal(EntidadeUsuario usuario, String porta, String serv) {
 		this.user = usuario;
-		this.conexaoCliente = con;
-		
+
 		try {
-			conexaoCliente.conectarChat(user, this);
-		} catch (RemoteException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			System.out.println(porta + " - " + serv);
+
+			System.out.println("1");
+			registry = LocateRegistry.getRegistry(serv, Integer.valueOf(porta));
+			System.out.println("2");
+			conexaoCliente = (InterfaceServidor) registry.lookup(InterfaceServidor.NOME);
+			System.out.println("3");
+
+			// System.out.println(usuario.getEmail() + "--"+
+			// usuario.getSenha());
+			conexaoCliente.desconectarChat(user);
+			user = conexaoCliente.conectarChat(user, new Teste());
+			System.out.println("4");
+			// System.out.println("TESTE 01");
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null,
+					"                   - ERRO -\n                             "
+							+ "- Verifique se o IP e PORTA estão corretos.\n             "
+							+ "- Verifique se não há bloqueio de FIREWALL ou ANTIVIRUS.\n" + "\n\n");
+
 		}
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("TadsZap");
 		setBounds(100, 100, 350, 600);
@@ -88,9 +104,9 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		JMenuItem mntmTransissao = new JMenuItem("Transmissão");
 		mntmTransissao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+
 				enviarTransmissao();
-				
+
 			}
 		});
 		mnConexo.add(mntmTransissao);
@@ -145,7 +161,7 @@ public class Principal extends JFrame implements InterfaceUsuario {
 		gbc_lblNomeLogado.gridx = 0;
 		gbc_lblNomeLogado.gridy = 0;
 		panel.add(lblNomeLogado, gbc_lblNomeLogado);
-		
+
 		final JComboBox<Status> CBStatus = new JComboBox<Status>();
 		CBStatus.setModel(new DefaultComboBoxModel<Status>(Status.values()));
 		CBStatus.addActionListener(new ActionListener() {
@@ -206,12 +222,12 @@ public class Principal extends JFrame implements InterfaceUsuario {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getClickCount() == 2) {
 					EntidadeUsuario usuario = new EntidadeUsuario();
-					
+
 					int linha = tableContatos.getSelectedRow();
-					
+
 					usuario.setNome(tableContatos.getValueAt(linha, 0).toString());
 					usuario.setStatus(Status.valueOf(tableContatos.getValueAt(linha, 1).toString()));
-					
+
 					tabbedConversas.add(usuario.getNome(), new Conversa(usuario));
 				}
 			}
@@ -259,27 +275,28 @@ public class Principal extends JFrame implements InterfaceUsuario {
 	public static void enviaMsg(String msg) {
 		global.enviarMensagem(msg);
 	}
-	
-	public void enviarTransmissao(){
-		new Transmissao(conexaoCliente, global.user).setVisible(true);;
+
+	public void enviarTransmissao() {
+		new Transmissao(conexaoCliente, global.user).setVisible(true);
+		;
 	}
 
 	public void enviarArquivo(Arquivo arquivo) {
-		String titleAt = tabbedConversas.getTitleAt(tabbedConversas.getSelectedIndex());
-
-		try {
-			if (titleAt.equals("Público")) {
-				JOptionPane.showMessageDialog(null, "Voçe não pode enviar arquivo para todos");
-			} else {
-				EntidadeUsuario destinatario = new EntidadeUsuario();
-				destinatario.setNome(titleAt);
-				conexaoCliente.enviarArquivo(user, destinatario, arquivo);
-			}
-
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+//		String titleAt = tabbedConversas.getTitleAt(tabbedConversas.getSelectedIndex());
+//
+//		try {
+//			if (titleAt.equals("Público")) {
+//				JOptionPane.showMessageDialog(null, "Voçe não pode enviar arquivo para todos");
+//			} else {
+//				EntidadeUsuario destinatario = new EntidadeUsuario();
+//				destinatario.setNome(titleAt);
+////				conexaoCliente.enviarArquivo(user, destinatario, arquivo);
+//			}
+//
+//		} catch (RemoteException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 	public void enviarMensagem(String mensagem) {
