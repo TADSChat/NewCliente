@@ -18,6 +18,7 @@ import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -40,15 +41,6 @@ public class Principal extends JFrame {
 	private JTextField field_pesquisa_contato;
 	private static JTabbedPane tabbedConversas;
 	private static EntidadeUsuario usuario;
-
-	public static EntidadeUsuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(EntidadeUsuario usuario) {
-		this.usuario = usuario;
-	}
-
 	private static JList<EntidadeUsuario> listaUsuarios;
 	private static Principal global;
 
@@ -79,8 +71,7 @@ public class Principal extends JFrame {
 		JMenuItem mntmAlterarSenha = new JMenuItem("Alterar Senha");
 		mntmAlterarSenha.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AlterarSenha novaSenha = new AlterarSenha(); 
-				novaSenha.setVisible(true);
+				AlterarSenha.getAlterarSenha().setVisible(true);
 			}
 		});
 		mnConexo.add(mntmAlterarSenha);
@@ -91,6 +82,9 @@ public class Principal extends JFrame {
 				try {
 					conexaoCliente.desconectarChat(usuario);
 					dispose();
+					usuario = null;
+					conexaoCliente = null;
+					new Login();
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
@@ -133,18 +127,18 @@ public class Principal extends JFrame {
 		gbc_lblNomeLogado.gridy = 0;
 		panel.add(lblNomeLogado, gbc_lblNomeLogado);
 
-		final JComboBox<Status> CBStatus = new JComboBox<Status>();
+		JComboBox<Status> CBStatus = new JComboBox<Status>();
 		CBStatus.setModel(new DefaultComboBoxModel<Status>(Status.values()));
+		CBStatus.setSelectedItem(usuario.getStatus());
+		CBStatus.removeItem(Status.OFFLINE);
 		CBStatus.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					System.out.println("TESTE 01");
 					usuario.setStatus(Status.valueOf(CBStatus.getSelectedItem().toString()));
-					System.out.println("TESTE 02 " + usuario.getStatus());
-					System.out.println(Login.getMeuUsuario());
 					conexaoCliente.atualizarStatus(usuario);
 				} catch (RemoteException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, "Erro ao atualizar status, verifique sua conexão e tente novamente!");
+					return;
 				}
 			}
 		});
@@ -227,31 +221,25 @@ public class Principal extends JFrame {
 	}
 
 	public static void enviaArq(EntidadeUsuario remetente, File arquivo) {
-		global.enviarArquivo(remetente,arquivo);
+		global.enviarArquivo(remetente, arquivo);
 	}
 
 	public static void enviaMsg(EntidadeUsuario remetente, String msg) {
-		global.enviarMensagem(remetente,msg);
+		global.enviarMensagem(remetente, msg);
 	}
 
 	public void enviarArquivo(EntidadeUsuario remetente, File arquivo) {
-		 
+
 		try {
-//			InterfaceUsuario usuarioI = conexaoCliente.buscarDestinatario(usuario, remetente);
-//			
-//			usuarioI.receberArquivo(usuario, arquivo);
-			
-			conexaoCliente.enviarArquivo(usuario,remetente,arquivo);
-			
+			conexaoCliente.enviarArquivo(usuario, remetente, arquivo);
+
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void enviarMensagem(EntidadeUsuario destinatario, String mensagem) {
-
 
 		try {
 			conexaoCliente.enviarMensagem(usuario, destinatario, mensagem);
@@ -294,5 +282,13 @@ public class Principal extends JFrame {
 	 */
 	public static JList<EntidadeUsuario> getListaUsuarios() {
 		return listaUsuarios;
+	}
+
+	public static EntidadeUsuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(EntidadeUsuario usuario) {
+		this.usuario = usuario;
 	}
 }

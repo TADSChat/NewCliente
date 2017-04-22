@@ -54,7 +54,7 @@ public class Login extends JFrame {
 		setVisible(true);
 		setTitle("TadsZap");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(420, 270);	
+		setSize(420, 270);
 		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
 
 		painelPrincipal = new JPanel();
@@ -184,7 +184,7 @@ public class Login extends JFrame {
 		gbc_btnSair.gridx = 0;
 		gbc_btnSair.gridy = 5;
 		painelPrincipal.add(btnSair, gbc_btnSair);
-		
+
 		setContentPane(painelPrincipal);
 	}
 
@@ -208,7 +208,6 @@ public class Login extends JFrame {
 				JOptionPane.showMessageDialog(null, "Usuario invalido!");
 				return;
 			} else {
-				System.out.println(meuUsuario);
 				new Principal();
 				dispose();
 			}
@@ -227,16 +226,7 @@ public class Login extends JFrame {
 		return conexaoCliente;
 	}
 
-	public static void setConexaoCliente(InterfaceServidor conexaoCliente) {
-		Login.conexaoCliente = conexaoCliente;
-	}
-
 	public static EntidadeUsuario getMeuUsuario() {
 		return meuUsuario;
 	}
-
-	public static void setMeuUsuario(EntidadeUsuario meuUsuario) {
-		Login.meuUsuario = meuUsuario;
-	}
-
 }

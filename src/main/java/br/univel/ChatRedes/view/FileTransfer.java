@@ -10,6 +10,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -108,10 +112,18 @@ public class FileTransfer extends JFrame {
 					return;
 				}
 
-				arquivo.renameTo(new File(path + File.separatorChar + arquivo.getName()));
+				File novoArquivo = new File(path + File.separator + arquivo.getName());
+
+				try {
+					novoArquivo.createNewFile();
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null,
+							String.format("Erro ao criar o arquivo [%s]! \n%s", arquivo.getName(), e1.toString()));
+					return;
+				}
 
 				JOptionPane.showMessageDialog(null,
-						String.format("Arquivo [%s] baixado com sucesso!", arquivo.getAbsolutePath()));
+						String.format("Arquivo [%s] baixado com sucesso!", arquivo.getName()));
 				dispose();
 
 			}
