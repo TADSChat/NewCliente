@@ -21,7 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 import common.EntidadeUsuario;
 
-public class TelaConversaTeste extends JFrame {
+public class TelaConversa extends JFrame {
 
 	private static final long serialVersionUID = 4790680784873764159L;
 	private JPanel contentPane;
@@ -29,7 +29,7 @@ public class TelaConversaTeste extends JFrame {
 	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	EntidadeUsuario user;
 
-	public TelaConversaTeste(EntidadeUsuario user) {
+	public TelaConversa(EntidadeUsuario user) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
 		contentPane = new JPanel();
