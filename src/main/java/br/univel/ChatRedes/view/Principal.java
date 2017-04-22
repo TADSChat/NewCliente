@@ -6,10 +6,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.rmi.RemoteException;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -25,8 +25,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
-import br.univel.ChatRedes.comum.MeuModelo;
-import common.Arquivo;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
 import common.Status;
@@ -221,32 +219,28 @@ public class Principal extends JFrame {
 
 	}
 
-	public static void enviaArq(Arquivo arquivo) {
-		global.enviarArquivo(arquivo);
+	public static void enviaArq(EntidadeUsuario remetente, File arquivo) {
+		global.enviarArquivo(remetente,arquivo);
 	}
 
 	public static void enviaMsg(EntidadeUsuario remetente, String msg) {
 		global.enviarMensagem(remetente,msg);
 	}
 
-	public void enviarArquivo(Arquivo arquivo) {
-		// String titleAt =
-		// tabbedConversas.getTitleAt(tabbedConversas.getSelectedIndex());
-		//
-		// try {
-		// if (titleAt.equals("Público")) {
-		// JOptionPane.showMessageDialog(null, "Voçe não pode enviar arquivo
-		// para todos");
-		// } else {
-		// EntidadeUsuario destinatario = new EntidadeUsuario();
-		// destinatario.setNome(titleAt);
-		//// conexaoCliente.enviarArquivo(user, destinatario, arquivo);
-		// }
-		//
-		// } catch (RemoteException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+	public void enviarArquivo(EntidadeUsuario remetente, File arquivo) {
+		 
+		try {
+//			InterfaceUsuario usuarioI = conexaoCliente.buscarDestinatario(usuario, remetente);
+//			
+//			usuarioI.receberArquivo(usuario, arquivo);
+			
+			conexaoCliente.enviarArquivo(usuario,remetente,arquivo);
+			
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	public void enviarMensagem(EntidadeUsuario destinatario, String mensagem) {

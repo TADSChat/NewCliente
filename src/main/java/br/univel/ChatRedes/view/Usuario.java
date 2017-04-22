@@ -1,5 +1,6 @@
 package br.univel.ChatRedes.view;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.rmi.RemoteException;
@@ -19,11 +20,16 @@ import common.InterfaceUsuario;
 
 public class Usuario implements InterfaceUsuario {
 
-	Integer porta = 1819;
+	private static Usuario usuario;
+	static Integer porta = 1819;
 
 	public Usuario() {
+		usuario = this;
+	}
+
+	public static void exportar(){
 		try {
-			InterfaceUsuario interfaceU = (InterfaceUsuario) UnicastRemoteObject.exportObject(this, 0);
+			InterfaceUsuario interfaceU = (InterfaceUsuario) UnicastRemoteObject.exportObject(usuario, 0);
 			Registry registry = LocateRegistry.createRegistry(getPorta());
 			registry.rebind(InterfaceServidor.NOME, interfaceU);
 		} catch (RemoteException e) {
@@ -31,8 +37,7 @@ public class Usuario implements InterfaceUsuario {
 			e.printStackTrace();
 		}
 	}
-
-	private int getPorta() {
+	private static int getPorta() {
 		ServerSocket socket = null;
 		try {
 			socket = new ServerSocket(porta);
@@ -58,9 +63,9 @@ public class Usuario implements InterfaceUsuario {
 	}
 
 	@Override
-	public void receberArquivo(EntidadeUsuario remetente, Arquivo arquivo) throws RemoteException {
-		// TODO Auto-generated method stub
-
+	public void receberArquivo(EntidadeUsuario remetente, File arquivo) throws RemoteException {
+		JOptionPane.showMessageDialog(null, "TA EXECUTANDO CERTINHO MEN!");
+		new FileTransfer(remetente, arquivo);
 	}
 
 	@Override

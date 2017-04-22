@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -15,6 +16,11 @@ import javax.swing.JTextField;
 import common.Arquivo;
 import common.EntidadeUsuario;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.awt.event.ActionEvent;
 
 public class Conversa extends JPanel {
@@ -83,15 +89,33 @@ public class Conversa extends JPanel {
 		add(btnEnviar, gbc_btnEnviar);
 
 		JButton btnArquivo = new JButton("Arquivo");
+		btnArquivo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				procurarArquivo();
+			}
+		});
 		GridBagConstraints gbc_btnArquivo = new GridBagConstraints();
 		gbc_btnArquivo.gridx = 2;
 		gbc_btnArquivo.gridy = 1;
 		add(btnArquivo, gbc_btnArquivo);
 
 	}
-
-	public void enviaArquivo(EntidadeUsuario destinatario, Arquivo arquivo) {
-		Principal.enviaArq(arquivo);
+	public void procurarArquivo(){
+		JFileChooser arquivo = new JFileChooser();
+		arquivo.setAcceptAllFileFilterUsed(false);
+		arquivo.showSaveDialog(null);
+		if (arquivo.getSelectedFile() != null) {
+			
+			
+			
+			String nome = arquivo.getSelectedFile().getName();
+			String extensao = arquivo.getSelectedFile().getName().substring(arquivo.getSelectedFile().getName().lastIndexOf(".") + 1,arquivo.getSelectedFile().getName().length());
+			Path path = Paths.get(arquivo.getSelectedFile().toString());
+		
+				
+			
+			Principal.enviaArq(user,arquivo.getSelectedFile());
+		}
 	}
 
 	public void mostrar(EntidadeUsuario remetente, String mensagem) {

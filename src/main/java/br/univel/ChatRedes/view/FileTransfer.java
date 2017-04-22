@@ -7,19 +7,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import common.Arquivo;
 import common.EntidadeUsuario;
 
 public class FileTransfer extends JFrame {
@@ -29,7 +25,7 @@ public class FileTransfer extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FileTransfer(EntidadeUsuario remetente, Arquivo arquivo) {
+	public FileTransfer(EntidadeUsuario remetente, File arquivo) {
 		setVisible(true);
 		setTitle("File Transfer");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -71,7 +67,7 @@ public class FileTransfer extends JFrame {
 		gbc_lblNomeDoArquivo.gridy = 3;
 		contentPane.add(lblNomeDoArquivo, gbc_lblNomeDoArquivo);
 		
-		JLabel lblArqNome = new JLabel(arquivo.getNome());
+		JLabel lblArqNome = new JLabel(arquivo.getName());
 		GridBagConstraints gbc_lblArqNome = new GridBagConstraints();
 		gbc_lblArqNome.gridwidth = 2;
 		gbc_lblArqNome.gridheight = 2;
@@ -83,16 +79,26 @@ public class FileTransfer extends JFrame {
 		JButton btnAceitar = new JButton("Aceitar");
 		btnAceitar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String path = "";
 				
-				try {
-					String path = "." + File.separatorChar + "shared" + File.separatorChar + arquivo.getNome();
-					Files.write(Paths.get(path), arquivo.getDados(), StandardOpenOption.CREATE);
-					
-					JOptionPane.showMessageDialog(null, "Arquivo baixado com sucesso!");
-					dispose();
-				} catch (IOException e2) {
-					throw new RuntimeException(e2);
+				JFileChooser arquivo = new JFileChooser();
+				arquivo.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				arquivo.setAcceptAllFileFilterUsed(false);
+				arquivo.showSaveDialog(null);
+				if (arquivo.getSelectedFile() != null) {
+					path = arquivo.getSelectedFile().toString();
+				}else{
+					System.out.println("DEU RUIM!!!!!");
+					return;
 				}
+				
+				System.out.println(path);
+//					Files.write(Paths.get(path), Files.readAllBytes(arquivo.getFile().getPath()), StandardOpenOption.CREATE);
+				System.out.println(arquivo.getName());
+				new File(path+File.separatorChar+arquivo.getName());
+//				arquivo.getFile().renameTo(new File(path));
+				JOptionPane.showMessageDialog(null, "Arquivo baixado com sucesso!");
+				dispose();
 			}
 		});
 		GridBagConstraints gbc_btnAceitar = new GridBagConstraints();

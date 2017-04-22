@@ -38,15 +38,12 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField field_email;
 	private JTextField field_servidor;
-	
+
 	private JNumberField field_porta;
 	private JPasswordField field_senha;
-	
+
 	private Registry registry;
 	private Dimension dimensaoTela = Toolkit.getDefaultToolkit().getScreenSize();
-	
-
-
 
 	/**
 	 * Create the frame.
@@ -122,6 +119,7 @@ public class Login extends JFrame {
 		contentPane.add(lblServidor, gbc_lblServidor);
 
 		field_servidor = new JTextField();
+		field_servidor.setText("192.168.25.13");
 		GridBagConstraints gbc_field_servidor = new GridBagConstraints();
 		gbc_field_servidor.insets = new Insets(0, 0, 5, 0);
 		gbc_field_servidor.gridwidth = 4;
@@ -140,6 +138,7 @@ public class Login extends JFrame {
 		contentPane.add(lblSenha_1, gbc_lblSenha_1);
 
 		field_porta = new JNumberField();
+		field_porta.setText("1818");
 		GridBagConstraints gbc_field_porta = new GridBagConstraints();
 		gbc_field_porta.insets = new Insets(0, 0, 5, 0);
 		gbc_field_porta.fill = GridBagConstraints.HORIZONTAL;
@@ -191,7 +190,9 @@ public class Login extends JFrame {
 			registry = LocateRegistry.getRegistry(ipServidor, Integer.valueOf(portaServidor));
 			conexaoCliente = (InterfaceServidor) registry.lookup(InterfaceServidor.NOME);
 
-			meuUsuario = conexaoCliente.conectarChat(user, new Usuario());
+			Usuario usuarioExportado = new Usuario();
+			usuarioExportado.exportar();
+			meuUsuario = conexaoCliente.conectarChat(user, usuarioExportado);
 
 			if (meuUsuario == null) {
 				JOptionPane.showMessageDialog(null, "Usuario invalido!");
@@ -211,6 +212,7 @@ public class Login extends JFrame {
 
 		}
 	}
+
 	public static InterfaceServidor getConexaoCliente() {
 		return conexaoCliente;
 	}
@@ -226,5 +228,5 @@ public class Login extends JFrame {
 	public static void setMeuUsuario(EntidadeUsuario meuUsuario) {
 		Login.meuUsuario = meuUsuario;
 	}
-	
+
 }
