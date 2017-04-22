@@ -76,14 +76,21 @@ public class Principal extends JFrame {
 		});
 		mnConexo.add(mntmTransissao);
 
-		JMenuItem mntmNewMenuItem = new JMenuItem("Alterar Dados");
-		mnConexo.add(mntmNewMenuItem);
+		JMenuItem mntmAlterarSenha = new JMenuItem("Alterar Senha");
+		mntmAlterarSenha.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AlterarSenha novaSenha = new AlterarSenha(); 
+				novaSenha.setVisible(true);
+			}
+		});
+		mnConexo.add(mntmAlterarSenha);
 
 		JMenuItem mntmSair = new JMenuItem("Sair");
 		mntmSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					conexaoCliente.desconectarChat(usuario);
+					dispose();
 				} catch (RemoteException e1) {
 					e1.printStackTrace();
 				}
