@@ -1,25 +1,30 @@
 package br.univel.ChatRedes.view;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
+import common.Criptografia;
+
 public class AlterarSenha extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 100385206680100633L;
+
+	private static AlterarSenha alterarSenha;
 	private JPanel contentPane;
 	private JPasswordField psSenhaAtual;
 	private JPasswordField psConfirma;
@@ -27,29 +32,14 @@ public class AlterarSenha extends JFrame {
 	private Dimension dimensaoTela = Toolkit.getDefaultToolkit().getScreenSize();
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					AlterarSenha frame = new AlterarSenha();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
 	 * Create the frame.
 	 */
-	public AlterarSenha() {
+	private AlterarSenha() {
 		setResizable(false);
 		setTitle("Editar Dados");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 350, 180);
+		setVisible(true);
 		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -116,6 +106,7 @@ public class AlterarSenha extends JFrame {
 		psConfirma.setColumns(10);
 
 		JButton btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(salvarSenha());
 		GridBagConstraints gbc_btnSalvar = new GridBagConstraints();
 		gbc_btnSalvar.gridwidth = 3;
 		gbc_btnSalvar.insets = new Insets(5, 0, 0, 0);
@@ -124,6 +115,57 @@ public class AlterarSenha extends JFrame {
 		gbc_btnSalvar.gridy = 3;
 		contentPane.add(btnSalvar, gbc_btnSalvar);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+	}
+
+	private ActionListener salvarSenha() {
+		return new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String senhaAtual = Criptografia.criptografar(String.valueOf(psSenhaAtual.getPassword()));
+				if (!senhaAtual.equals(Principal.getUsuario().getSenha())) {
+					JOptionPane.showMessageDialog(null, "Senha atual incorreta, favor verificar!");
+					psSenhaAtual.setText("");
+					psNovaSenha.setText("");
+					psConfirma.setText("");
+					return;
+				}
+				
+				if (!Arrays.equals(psNovaSenha.getPassword(), psConfirma.getPassword())){
+					JOptionPane.showMessageDialog(null, "Nova senha nao confere com a confirmação, favor verificar!");
+					psSenhaAtual.setText("");
+					psNovaSenha.setText("");
+					psConfirma.setText("");
+					return;
+				}
+				
+				String novaSenha = Criptografia.criptografar(String.valueOf(psNovaSenha.getPassword()));
+				Principal.getUsuario().setSenha(novaSenha);
+				try {
+					if (!Login.getConexaoCliente().alterarSenha(Principal.getUsuario())){
+						JOptionPane.showMessageDialog(null, "Erro ao atualizar senha, verifique sua conexão e tente novamente!");
+						return;
+					}
+				} catch (RemoteException e) {
+					JOptionPane.showMessageDialog(null, "Erro ao atualizar senha, verifique sua conexão e tente novamente!");
+					return;
+				}
+
+				JOptionPane.showMessageDialog(null, "Senha atualizada com sucesso!");
+				alterarSenha = null;
+				dispose();
+			}
+		};
+	}
+
+	/**
+	 * @return the alterarSenha
+	 */
+	public synchronized static AlterarSenha getAlterarSenha() {
+		if (alterarSenha == null) {
+			alterarSenha = new AlterarSenha();
+		}
+		return alterarSenha;
 	}
 
 }
