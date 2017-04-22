@@ -11,6 +11,8 @@ import java.awt.event.ActionListener;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -29,9 +31,6 @@ import javax.swing.JTextArea;
 
 public class Login extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static InterfaceServidor conexaoCliente;
@@ -50,16 +49,16 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
-		setResizable(true);
+		setResizable(false);
 		setVisible(true);
 		setTitle("TadsZap");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(420, 270);
+		setSize(410, 350);
 		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
 
 		painelPrincipal = new JPanel();
 		painelPrincipal.setBorder(new EmptyBorder(10, 10, 10, 10));
-		painelPrincipal.setSize(400, 250);
+		painelPrincipal.setSize(400, 320);
 		GridBagLayout gbl_painelPrincipal = new GridBagLayout();
 		gbl_painelPrincipal.columnWidths = new int[] { 65, 150, 61, 0 };
 		gbl_painelPrincipal.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0 };
@@ -67,7 +66,7 @@ public class Login extends JFrame {
 		gbl_painelPrincipal.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		painelPrincipal.setLayout(gbl_painelPrincipal);
 
-		JLabel lblNewLabel = new JLabel("TadsZap");
+		JLabel lblNewLabel = new JLabel(new ImageIcon("imagens\\group.png"));
 		lblNewLabel.setFont(new Font("Arial", Font.BOLD | Font.ITALIC, 26));
 		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
 		gbc_lblNewLabel.anchor = GridBagConstraints.NORTH;
@@ -154,11 +153,8 @@ public class Login extends JFrame {
 
 		JButton btnConectar = new JButton("Conectar");
 		btnConectar.addActionListener(new ActionListener() {
-
 			public void actionPerformed(ActionEvent e) {
-
 				conectar();
-
 			}
 		});
 		GridBagConstraints gbc_btnConectar = new GridBagConstraints();
@@ -202,10 +198,11 @@ public class Login extends JFrame {
 
 			Usuario usuarioExportado = new Usuario();
 			usuarioExportado.exportar();
+			user.setIpConexao(usuarioExportado.getIpConexao()).setPortaConexao(usuarioExportado.getPortaConexao());
 			meuUsuario = conexaoCliente.conectarChat(user, usuarioExportado);
 
 			if (meuUsuario == null) {
-				JOptionPane.showMessageDialog(null, "Usuario invalido!");
+				JOptionPane.showMessageDialog(null, "Usuario nao encontrado no servidor. Verifique seu email e senha!");
 				return;
 			} else {
 				new Principal();
@@ -213,12 +210,8 @@ public class Login extends JFrame {
 			}
 
 		} catch (Exception e1) {
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(null,
-					"                   - ERRO -\n                             "
-							+ "- Verifique se o IP e PORTA estão corretos.\n             "
-							+ "- Verifique se não há bloqueio de FIREWALL ou ANTIVIRUS.\n" + "\n\n");
-
+			JOptionPane.showMessageDialog(null, "Erro ao se conectar ao servidor! \n" + e1.toString());
+			return;
 		}
 	}
 

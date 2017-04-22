@@ -1,7 +1,9 @@
 package br.univel.ChatRedes.model;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -15,7 +17,7 @@ import javax.swing.JOptionPane;
 import br.univel.ChatRedes.view.FileTransfer;
 import br.univel.ChatRedes.view.MeuModelo;
 import br.univel.ChatRedes.view.Principal;
-import common.Arquivo;
+import br.univel.ChatRedes.view.TelaConversa;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
 import common.InterfaceUsuario;
@@ -23,7 +25,9 @@ import common.InterfaceUsuario;
 public class Usuario implements InterfaceUsuario {
 
 	private static Usuario usuario;
-	static Integer porta = 1819;
+	private static String ipConexao = "";
+	private static Integer portaConexao = 1819;
+	private static InetAddress IP;
 
 	public Usuario() {
 		usuario = this;
@@ -35,32 +39,41 @@ public class Usuario implements InterfaceUsuario {
 			Registry registry = LocateRegistry.createRegistry(getPorta());
 			registry.rebind(InterfaceServidor.NOME, interfaceU);
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Erro ao exportar registro para o servidor, reinicie o programa!");
+			return;
+		}
+
+		try {
+			IP = InetAddress.getLocalHost();
+			ipConexao = IP.getHostAddress();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro ao ler IP local, reinicie o programa!");
+			return;
 		}
 	}
 
 	private static int getPorta() {
 		ServerSocket socket = null;
 		try {
-			socket = new ServerSocket(porta);
+			socket = new ServerSocket(portaConexao);
 		} catch (IOException e) {
-			porta++;
+			portaConexao++;
 			getPorta();
 		} finally {
 			try {
 				socket.close();
 			} catch (Exception e) {
-				porta++;
+				portaConexao++;
 				getPorta();
 			}
 		}
-		return porta;
+		return portaConexao;
 	}
 
 	@Override
 	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		Principal.receberMensagem(remetente, mensagem);
+		TelaConversa conversa = TelaConversa.getTelaConversa(remetente);
+		conversa.mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
 	}
 
 	@Override
@@ -84,6 +97,20 @@ public class Usuario implements InterfaceUsuario {
 		});
 		System.out.println("MODELO: " + modelo);
 		Principal.getListaUsuarios().setModel(modelo);
+	}
+
+	/**
+	 * @return the ipConexao
+	 */
+	public static String getIpConexao() {
+		return ipConexao;
+	}
+
+	/**
+	 * @return the portaConexao
+	 */
+	public static Integer getPortaConexao() {
+		return portaConexao;
 	}
 
 }

@@ -130,24 +130,26 @@ public class AlterarSenha extends JFrame {
 					psConfirma.setText("");
 					return;
 				}
-				
-				if (!Arrays.equals(psNovaSenha.getPassword(), psConfirma.getPassword())){
+
+				if (!Arrays.equals(psNovaSenha.getPassword(), psConfirma.getPassword())) {
 					JOptionPane.showMessageDialog(null, "Nova senha nao confere com a confirmação, favor verificar!");
 					psSenhaAtual.setText("");
 					psNovaSenha.setText("");
 					psConfirma.setText("");
 					return;
 				}
-				
+
 				String novaSenha = Criptografia.criptografar(String.valueOf(psNovaSenha.getPassword()));
 				Principal.getUsuario().setSenha(novaSenha);
 				try {
-					if (!Login.getConexaoCliente().alterarSenha(Principal.getUsuario())){
-						JOptionPane.showMessageDialog(null, "Erro ao atualizar senha, verifique sua conexão e tente novamente!");
+					if (!Login.getConexaoCliente().alterarSenha(Principal.getUsuario())) {
+						JOptionPane.showMessageDialog(null,
+								"Erro ao atualizar senha, verifique sua conexão e tente novamente!");
 						return;
 					}
 				} catch (RemoteException e) {
-					JOptionPane.showMessageDialog(null, "Erro ao atualizar senha, verifique sua conexão e tente novamente!");
+					JOptionPane.showMessageDialog(null,
+							"Erro ao atualizar senha, verifique sua conexão e tente novamente!");
 					return;
 				}
 

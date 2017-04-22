@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -26,12 +27,20 @@ public class TelaConversa extends JFrame {
 	private static final long serialVersionUID = 4790680784873764159L;
 	private JPanel contentPane;
 	private JTextArea textAreaDigitar;
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	private static JTextPaneConversa painelConversa;
+	private EntidadeUsuario destinatario;
+
+	private static TelaConversa telaConversa;
+
+	static SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	EntidadeUsuario user;
 
-	public TelaConversa(EntidadeUsuario user) {
+	private TelaConversa(EntidadeUsuario destinatario) {
+		this.destinatario = destinatario;
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
+
 		contentPane = new JPanel();
 		contentPane.setForeground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -71,22 +80,23 @@ public class TelaConversa extends JFrame {
 		gbc_scrollPaneConversa.gridy = 0;
 		panelConversa.add(scrollPaneConversa, gbc_scrollPaneConversa);
 
-		JTextArea textAreaConversa = new JTextArea();
-		scrollPaneConversa.setViewportView(textAreaConversa);
+		painelConversa = new JTextPaneConversa();
+		painelConversa.setEditable(false);
+		scrollPaneConversa.setViewportView(painelConversa);
 
-		JPanel panelDigitar = new JPanel();
+		JPanel painelDigitar = new JPanel();
 		GridBagConstraints gbc_panelDigitar = new GridBagConstraints();
 		gbc_panelDigitar.insets = new Insets(5, 0, 0, 5);
 		gbc_panelDigitar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panelDigitar.gridx = 0;
 		gbc_panelDigitar.gridy = 1;
-		contentPane.add(panelDigitar, gbc_panelDigitar);
+		contentPane.add(painelDigitar, gbc_panelDigitar);
 		GridBagLayout gbl_panelDigitar = new GridBagLayout();
 		gbl_panelDigitar.columnWidths = new int[] { 152, 79, 0 };
 		gbl_panelDigitar.rowHeights = new int[] { 0, 25, 0 };
 		gbl_panelDigitar.columnWeights = new double[] { 1.0, 0.0, Double.MIN_VALUE };
 		gbl_panelDigitar.rowWeights = new double[] { 0.0, 0.0, Double.MIN_VALUE };
-		panelDigitar.setLayout(gbl_panelDigitar);
+		painelDigitar.setLayout(gbl_panelDigitar);
 
 		JScrollPane scrollPaneDigitar = new JScrollPane();
 		GridBagConstraints gbc_scrollPaneDigitar = new GridBagConstraints();
@@ -94,7 +104,7 @@ public class TelaConversa extends JFrame {
 		gbc_scrollPaneDigitar.fill = GridBagConstraints.BOTH;
 		gbc_scrollPaneDigitar.gridx = 0;
 		gbc_scrollPaneDigitar.gridy = 0;
-		panelDigitar.add(scrollPaneDigitar, gbc_scrollPaneDigitar);
+		painelDigitar.add(scrollPaneDigitar, gbc_scrollPaneDigitar);
 
 		textAreaDigitar = new JTextArea();
 		textAreaDigitar.setBorder(new EmptyBorder(2, 2, 2, 2));
@@ -102,10 +112,11 @@ public class TelaConversa extends JFrame {
 
 		JButton btnEnviar = new JButton("Enviar");
 		GridBagConstraints gbc_btnEnviar = new GridBagConstraints();
+		gbc_btnEnviar.insets = new Insets(2, 2, 2, 2);
 		gbc_btnEnviar.fill = GridBagConstraints.BOTH;
 		gbc_btnEnviar.gridx = 1;
 		gbc_btnEnviar.gridy = 0;
-		panelDigitar.add(btnEnviar, gbc_btnEnviar);
+		painelDigitar.add(btnEnviar, gbc_btnEnviar);
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				enviarMensagem();
@@ -114,10 +125,11 @@ public class TelaConversa extends JFrame {
 
 		JButton btnArquivo = new JButton("Arquivo");
 		GridBagConstraints gbc_btnArquivo = new GridBagConstraints();
+		gbc_btnArquivo.insets = new Insets(2, 2, 2, 2);
 		gbc_btnArquivo.fill = GridBagConstraints.BOTH;
 		gbc_btnArquivo.gridx = 1;
 		gbc_btnArquivo.gridy = 1;
-		panelDigitar.add(btnArquivo, gbc_btnArquivo);
+		painelDigitar.add(btnArquivo, gbc_btnArquivo);
 		btnArquivo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				procurarArquivo();
@@ -126,13 +138,34 @@ public class TelaConversa extends JFrame {
 
 	}
 
+	public static void mostrarMensagem(String remetente, String mensagem, Color cor) {
+		painelConversa.append(cor, getCabecalho(remetente));
+		painelConversa.append(Color.BLACK, mensagem + "\n");
+	}
+
 	public void enviarMensagem() {
+		if (destinatario.getId() == 0) {
+			try {
+				Login.getConexaoCliente().enviarMensagem(Login.getMeuUsuario(), textAreaDigitar.getText());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 
-		Date data = new Date();
-		String mensagem = textAreaDigitar.getText();
-		Principal.enviaMsg(user, mensagem);
-		textAreaDigitar.append(sdf.format(data) + " - " + Principal.getUsuario().getNome() + ": " + mensagem + "\n");
+		} else {
+			try {
+				Login.getConexaoCliente().enviarMensagem(Login.getMeuUsuario(), destinatario,
+						textAreaDigitar.getText());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		}
 
+		mostrarMensagem(Login.getMeuUsuario().getNome(), textAreaDigitar.getText(), Color.RED);
+
+	}
+
+	private static String getCabecalho(String nome) {
+		return (dataFormatada.format(new Date()) + " - " + nome.toUpperCase() + " disse: ");
 	}
 
 	public void procurarArquivo() {
@@ -147,7 +180,11 @@ public class TelaConversa extends JFrame {
 					arquivo.getSelectedFile().getName().length());
 			Path path = Paths.get(arquivo.getSelectedFile().toString());
 
-			Principal.enviaArq(user, arquivo.getSelectedFile());
+			try {
+				Login.getConexaoCliente().enviarArquivo(Login.getMeuUsuario(), destinatario, arquivo.getSelectedFile());
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -157,6 +194,16 @@ public class TelaConversa extends JFrame {
 
 	public void setUser(EntidadeUsuario user) {
 		this.user = user;
+	}
+
+	/**
+	 * @return the telaConversa
+	 */
+	public synchronized static TelaConversa getTelaConversa(EntidadeUsuario destinatario) {
+		if (telaConversa == null) {
+			telaConversa = new TelaConversa(destinatario);
+		}
+		return telaConversa;
 	}
 
 }

@@ -220,63 +220,6 @@ public class Principal extends JFrame {
 
 	}
 
-	public static void enviaArq(EntidadeUsuario remetente, File arquivo) {
-		global.enviarArquivo(remetente, arquivo);
-	}
-
-	public static void enviaMsg(EntidadeUsuario remetente, String msg) {
-		global.enviarMensagem(remetente, msg);
-	}
-
-	public void enviarArquivo(EntidadeUsuario remetente, File arquivo) {
-
-		try {
-			conexaoCliente.enviarArquivo(usuario, remetente, arquivo);
-
-		} catch (RemoteException e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public void enviarMensagem(EntidadeUsuario destinatario, String mensagem) {
-
-		try {
-			conexaoCliente.enviarMensagem(usuario, destinatario, mensagem);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	public static void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		int totaltabs = tabbedConversas.getTabCount();
-		boolean ativo = false;
-		if (totaltabs != 0) {
-			for (int i = 0; i < totaltabs; i++) {
-				String titulo = tabbedConversas.getTitleAt(i);
-
-				System.out.println(remetente.getNome() + " - " + titulo);
-				if (titulo.equalsIgnoreCase(remetente.getNome())) {
-					ativo = true;
-					Conversa conversa = (Conversa) tabbedConversas.getComponentAt(i);
-					conversa.mostrar(remetente, mensagem);
-					System.out.println(conversa.toString());
-					tabbedConversas.setSelectedIndex(i);
-				}
-			}
-		}
-
-		if (!ativo) {
-
-			Conversa conversa = new Conversa(remetente);
-			tabbedConversas.add(remetente.getNome(), conversa);
-			conversa.mostrar(remetente, mensagem);
-
-		}
-	}
-
 	/**
 	 * @return the listaUsuarios
 	 */
