@@ -1,4 +1,4 @@
-package br.univel.ChatRedes.view;
+package br.univel.ChatRedes.model;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,9 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
-import br.univel.ChatRedes.comum.MeuModelo;
+import br.univel.ChatRedes.view.FileTransfer;
+import br.univel.ChatRedes.view.MeuModelo;
+import br.univel.ChatRedes.view.Principal;
 import common.Arquivo;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
@@ -27,7 +29,7 @@ public class Usuario implements InterfaceUsuario {
 		usuario = this;
 	}
 
-	public static void exportar(){
+	public static void exportar() {
 		try {
 			InterfaceUsuario interfaceU = (InterfaceUsuario) UnicastRemoteObject.exportObject(usuario, 0);
 			Registry registry = LocateRegistry.createRegistry(getPorta());
@@ -37,6 +39,7 @@ public class Usuario implements InterfaceUsuario {
 			e.printStackTrace();
 		}
 	}
+
 	private static int getPorta() {
 		ServerSocket socket = null;
 		try {
@@ -57,14 +60,11 @@ public class Usuario implements InterfaceUsuario {
 
 	@Override
 	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		System.out.println(remetente.getNome() +"=" +mensagem);
-		
 		Principal.receberMensagem(remetente, mensagem);
 	}
 
 	@Override
 	public void receberArquivo(EntidadeUsuario remetente, File arquivo) throws RemoteException {
-		JOptionPane.showMessageDialog(null, "TA EXECUTANDO CERTINHO MEN!");
 		new FileTransfer(remetente, arquivo);
 	}
 

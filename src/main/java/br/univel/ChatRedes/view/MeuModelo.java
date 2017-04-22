@@ -1,4 +1,4 @@
-package br.univel.ChatRedes.comum;
+package br.univel.ChatRedes.view;
 
 import java.util.ArrayList;
 import java.util.List;
