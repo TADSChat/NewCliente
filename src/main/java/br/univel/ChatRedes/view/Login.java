@@ -95,6 +95,7 @@ public class Login extends JFrame {
 		painelPrincipal.add(field_email, gbc_field_email);
 		field_email.setColumns(10);
 
+
 		JLabel lblSenha = new JLabel("Senha:");
 		GridBagConstraints gbc_lblSenha = new GridBagConstraints();
 		gbc_lblSenha.anchor = GridBagConstraints.NORTHEAST;
@@ -182,6 +183,7 @@ public class Login extends JFrame {
 		painelPrincipal.add(btnSair, gbc_btnSair);
 
 		setContentPane(painelPrincipal);
+		field_email.grabFocus();
 	}
 
 	protected void conectar() {
