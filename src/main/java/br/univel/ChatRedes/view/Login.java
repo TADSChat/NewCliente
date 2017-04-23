@@ -183,6 +183,7 @@ public class Login extends JFrame {
 
 	@SuppressWarnings("static-access")
 	protected void conectar() {
+		System.out.println("TESTE");
 		EntidadeUsuario user = new EntidadeUsuario();
 
 		String ipServidor = field_servidor.getText();
