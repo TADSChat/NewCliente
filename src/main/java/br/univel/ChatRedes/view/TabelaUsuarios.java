@@ -1,18 +1,17 @@
 package br.univel.ChatRedes.view;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import java.awt.GridBagConstraints;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 
 import common.EntidadeUsuario;
-import common.Status;
 
 public class TabelaUsuarios extends JPanel {
 

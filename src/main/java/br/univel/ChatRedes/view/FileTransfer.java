@@ -10,10 +10,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -23,10 +19,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import common.Arquivo;
 import common.EntidadeUsuario;
 
 public class FileTransfer extends JFrame {
+
+	private static final long serialVersionUID = -7747678608703047693L;
 
 	private JPanel contentPane;
 

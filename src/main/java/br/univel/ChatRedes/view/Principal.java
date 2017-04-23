@@ -160,6 +160,7 @@ public class Principal extends JFrame {
 		return usuario;
 	}
 
+	@SuppressWarnings("static-access")
 	public void setUsuario(EntidadeUsuario usuario) {
 		this.usuario = usuario;
 	}

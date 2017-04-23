@@ -2,12 +2,8 @@ package br.univel.ChatRedes.view;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -58,7 +54,6 @@ public class TelaConversa extends JFrame {
 			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
 				tabbedPane.setSelectedIndex(i);
 				index = i;
-				System.out.println("INDEX ACHOU: " + index + " " + usuario.getEmail());
 			}
 		}
 
@@ -70,10 +65,8 @@ public class TelaConversa extends JFrame {
 			tabbedPane.setTabComponentAt(i2, new JButtonTabbedPane(tabbedPane));
 			tabbedPane.setSelectedComponent(conversa);
 			index = tabbedPane.getSelectedIndex();
-			System.out.println("INDEX NAO ACHOU: " + index);
 		}
 
-		System.out.println("tiTULO RETORNADO: " + tabbedPane.getTitleAt(index));
 		return (Conversa) tabbedPane.getComponentAt(index);
 	}
 

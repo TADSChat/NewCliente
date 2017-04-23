@@ -1,11 +1,29 @@
 package br.univel.ChatRedes.view;
 
-import javax.swing.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.AbstractButton;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
-import java.awt.*;
-import java.awt.event.*;
 
 public class JButtonTabbedPane extends JPanel {
+	
+	private static final long serialVersionUID = 4380330445011222131L;
 	private final JTabbedPane pane;
 
 	public JButtonTabbedPane(final JTabbedPane pane) {
@@ -20,6 +38,9 @@ public class JButtonTabbedPane extends JPanel {
 		setOpaque(false);
 
 		JLabel label = new JLabel() {
+
+			private static final long serialVersionUID = -8975898647604737385L;
+
 			public String getText() {
 				int i = pane.indexOfTabComponent(JButtonTabbedPane.this);
 				if (i != -1) {
@@ -40,6 +61,9 @@ public class JButtonTabbedPane extends JPanel {
 	}
 
 	private class TabButton extends JButton implements ActionListener {
+		
+		private static final long serialVersionUID = -3968839509625942226L;
+
 		public TabButton() {
 			int size = 17;
 			setPreferredSize(new Dimension(size, size));

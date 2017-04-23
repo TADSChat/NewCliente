@@ -11,15 +11,12 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import br.univel.ChatRedes.view.FileTransfer;
 import br.univel.ChatRedes.view.Modelo;
-import br.univel.ChatRedes.view.Principal;
 import br.univel.ChatRedes.view.TabelaUsuarios;
 import br.univel.ChatRedes.view.TelaConversa;
-import br.univel.ChatRedes.view.Conversa;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
 import common.InterfaceUsuario;
@@ -73,6 +70,7 @@ public class Usuario implements InterfaceUsuario {
 		return portaConexao;
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
 		TelaConversa.getTelaConversa().abrirAba(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
@@ -83,6 +81,7 @@ public class Usuario implements InterfaceUsuario {
 		new FileTransfer(remetente, arquivo);
 	}
 
+	@SuppressWarnings("static-access")
 	@Override
 	public void receberListaParticipantes(List<EntidadeUsuario> lista) throws RemoteException {
 		Modelo.deletarModelo();

@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,9 +24,6 @@ import javax.swing.border.EmptyBorder;
 import br.univel.ChatRedes.model.Usuario;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
-import common.InterfaceUsuario;
-import common.Status;
-import javax.swing.JTextArea;
 
 public class Login extends JFrame {
 
@@ -94,7 +90,6 @@ public class Login extends JFrame {
 		gbc_field_email.gridy = 1;
 		painelPrincipal.add(field_email, gbc_field_email);
 		field_email.setColumns(10);
-
 
 		JLabel lblSenha = new JLabel("Senha:");
 		GridBagConstraints gbc_lblSenha = new GridBagConstraints();
@@ -186,6 +181,7 @@ public class Login extends JFrame {
 		field_email.grabFocus();
 	}
 
+	@SuppressWarnings("static-access")
 	protected void conectar() {
 		EntidadeUsuario user = new EntidadeUsuario();
 
@@ -207,7 +203,8 @@ public class Login extends JFrame {
 				JOptionPane.showMessageDialog(null, "Usuario nao encontrado no servidor. Verifique seu email e senha!");
 				return;
 			} else {
-				Principal.getPrincipal().setVisible(true);;
+				Principal.getPrincipal().setVisible(true);
+				;
 				dispose();
 			}
 

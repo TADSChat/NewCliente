@@ -15,7 +15,6 @@ public class Modelo extends AbstractTableModel implements TableModel {
 	private static Modelo modelo;
 	private Object[][] matriz;
 	private int linha = 0;
-	private static int index = 0;
 
 	private static List<EntidadeUsuario> listaUsuarios;
 

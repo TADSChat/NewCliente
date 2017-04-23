@@ -4,14 +4,12 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -35,11 +33,13 @@ public class Conversa extends JPanel {
 	private JTextArea textAreaDigitar;
 	private static JTextPaneConversa painelConversa;
 	private static EntidadeUsuario destinatario;
+	@SuppressWarnings("unused")
 	private Conversa conversa;
 
 	static SimpleDateFormat dataFormatada = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	EntidadeUsuario user;
 
+	@SuppressWarnings("static-access")
 	public Conversa(EntidadeUsuario destinatario) {
 		this.destinatario = destinatario;
 
@@ -205,6 +205,7 @@ public class Conversa extends JPanel {
 			try {
 				Registry registry = LocateRegistry.getRegistry(destinatario.getIpConexao(),
 						destinatario.getPortaConexao());
+				@SuppressWarnings("unused")
 				InterfaceUsuario conexaoCliente = (InterfaceUsuario) registry.lookup(InterfaceUsuario.NOME);
 
 				Login.getConexaoCliente().enviarArquivo(Login.getMeuUsuario(), destinatario, arquivo.getSelectedFile());
