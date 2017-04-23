@@ -75,7 +75,7 @@ public class Usuario implements InterfaceUsuario {
 
 	@Override
 	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		TelaConversa.getTelaConversa().getAba(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
+		TelaConversa.getTelaConversa().abrirAba(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
 	}
 
 	@Override

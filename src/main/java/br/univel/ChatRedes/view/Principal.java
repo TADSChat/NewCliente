@@ -61,7 +61,7 @@ public class Principal extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				EntidadeUsuario userTodos = new EntidadeUsuario().setNome("Enviar a todos os Usuarios").setId(0)
 						.setEmail("TODOS");
-				TelaConversa.getTelaConversa().getAba(userTodos);
+				TelaConversa.getTelaConversa().abrirAba(userTodos);
 			}
 		});
 		mnConexo.add(mntmTransissao);
@@ -80,6 +80,7 @@ public class Principal extends JFrame {
 				try {
 					conexaoCliente.desconectarChat(usuario);
 					dispose();
+					TelaConversa.deleteTela();
 					usuario = null;
 					conexaoCliente = null;
 					new Login();

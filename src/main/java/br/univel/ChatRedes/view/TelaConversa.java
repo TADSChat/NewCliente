@@ -1,22 +1,16 @@
 package br.univel.ChatRedes.view;
 
-import javax.swing.JFrame;
-import java.awt.GridBagLayout;
-import javax.swing.JPanel;
-
-import java.awt.Component;
 import java.awt.GridBagConstraints;
-import javax.swing.JLabel;
-import java.awt.Insets;
-import javax.swing.JTextArea;
-
-import common.EntidadeUsuario;
-
-import javax.swing.JButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
+import java.awt.GridBagLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
+
+import common.EntidadeUsuario;
 
 public class TelaConversa extends JFrame {
 
@@ -24,13 +18,13 @@ public class TelaConversa extends JFrame {
 
 	private static TelaConversa telaConversa;
 	private static JTabbedPane tabbedPane;
-	
+
 	public TelaConversa() {
 		setVisible(true);
 		setSize(600, 400);
 		setTitle("CONVERSAS");
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
-		
+
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 434, 0 };
 		gridBagLayout.rowHeights = new int[] { 191, 0 };
@@ -44,32 +38,36 @@ public class TelaConversa extends JFrame {
 		gbc_tabbedPane.gridx = 0;
 		gbc_tabbedPane.gridy = 0;
 		getContentPane().add(tabbedPane, gbc_tabbedPane);
-		
+
 		addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent evento) {
-				if (evento.getKeyCode() == KeyEvent.VK_ESCAPE){
+				if (evento.getKeyCode() == KeyEvent.VK_ESCAPE) {
 					tabbedPane.remove(tabbedPane.getSelectedIndex());
 				}
 			}
 		});
 
-		if (tabbedPane.getTabCount() == 0){
+		if (tabbedPane.getTabCount() == 0) {
 			dispose();
 		}
 	}
-	
-	public Conversa getAba(EntidadeUsuario usuario){
+
+	public Conversa abrirAba(EntidadeUsuario usuario) {
 		int index = -1;
 		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
 				tabbedPane.setSelectedIndex(i);
 				index = i;
 			}
-		}		
+		}
 
-		if (index < 0){
-			tabbedPane.add(usuario.getEmail(), new Conversa(usuario));
+		if (index < 0) {
+			Conversa conversa = new Conversa(usuario);
+			tabbedPane.add(usuario.getEmail(), conversa);
+			tabbedPane.setSelectedComponent(conversa);
+			int i2 = tabbedPane.getSelectedIndex();
+			tabbedPane.setTabComponentAt(i2, new JButtonTabbedPane(tabbedPane));
 			index = tabbedPane.getTabCount() - 1;
 		}
 
@@ -92,5 +90,11 @@ public class TelaConversa extends JFrame {
 	 */
 	public static JTabbedPane getTabbedPane() {
 		return tabbedPane;
+	}
+
+	public static void deleteTela() {
+		telaConversa.dispose();
+		telaConversa = null;
+		tabbedPane = null;
 	}
 }
