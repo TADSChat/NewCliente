@@ -41,9 +41,6 @@ public class Login extends JFrame {
 	private Registry registry;
 	private Dimension dimensaoTela = Toolkit.getDefaultToolkit().getScreenSize();
 
-	/**
-	 * Create the frame.
-	 */
 	public Login() {
 		setResizable(false);
 		setVisible(true);
