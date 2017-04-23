@@ -27,9 +27,13 @@ public class Modelo extends AbstractTableModel implements TableModel {
 
 		listaUsuarios = lista;
 
-		EntidadeUsuario usuarioTodos = new EntidadeUsuario().setNome("Transmissão").setId(0).setEmail("TODOS")
-				.setStatus(Status.ONLINE);
-		listaUsuarios.add(0, usuarioTodos);
+		if (listaUsuarios != null) {
+			if (listaUsuarios.size() > 1) {
+				EntidadeUsuario usuarioTodos = new EntidadeUsuario().setNome("Transmissão").setId(0).setEmail("TODOS")
+						.setStatus(Status.ONLINE);
+				listaUsuarios.add(0, usuarioTodos);
+			}
+		}
 
 		matriz = new Object[lista.size()][3];
 
