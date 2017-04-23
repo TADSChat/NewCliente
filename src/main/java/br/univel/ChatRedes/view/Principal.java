@@ -45,10 +45,14 @@ public class Principal extends JFrame {
 
 		addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent evt) {
-				if (JOptionPane.showConfirmDialog(null, "Deseja realmente sair?") == JOptionPane.OK_OPTION) {
+				int dialogButton = JOptionPane.YES_NO_OPTION;
+				int resposta = JOptionPane.showConfirmDialog(null,
+						String.format("Deseja realmente sair?", usuario.getNome()), "Atenção", dialogButton);
+
+				if (resposta == JOptionPane.YES_OPTION) {
 					resetarCliente();
 				} else {
-					return;
+					setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 				}
 			}
 		});

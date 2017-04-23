@@ -204,13 +204,12 @@ public class Login extends JFrame {
 				return;
 			} else {
 				Principal.getPrincipal().setVisible(true);
-				;
 				dispose();
 			}
 
 		} catch (Exception e1) {
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(null, "Erro ao se conectar ao servidor! \n" + e1.toString());
+			String mensagem[] = e1.getCause().toString().split(":");
+			JOptionPane.showMessageDialog(null, "Erro ao se conectar ao servidor! \n" + mensagem[1]);
 			return;
 		}
 	}
