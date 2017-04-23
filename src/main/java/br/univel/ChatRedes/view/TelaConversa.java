@@ -38,6 +38,7 @@ public class TelaConversa extends JFrame {
 	private TelaConversa(EntidadeUsuario destinatario) {
 		this.destinatario = destinatario;
 
+		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 600, 450);
 
