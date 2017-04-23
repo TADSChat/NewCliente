@@ -89,28 +89,4 @@ public class Modelo extends AbstractTableModel implements TableModel {
 	public static synchronized List<EntidadeUsuario> getListaUsuarios() {
 		return listaUsuarios;
 	}
-
-	public static synchronized void removerMeuUsuario() {
-		try {
-			if (Login.getMeuUsuario() != null) {
-				if (Login.getMeuUsuario().getId() != null) {
-					index = -1;
-					listaUsuarios.forEach(usuarioLista -> {
-						if (usuarioLista != null) {
-							if (usuarioLista.getId() != null) {
-								if (usuarioLista.getId().equals(Login.getMeuUsuario().getId())) {
-									index = listaUsuarios.indexOf(usuarioLista);
-								}
-							}
-						}
-					});
-					if (index >= 0) {
-						listaUsuarios.remove(index);
-					}
-				}
-			}
-		} catch (Exception e) {
-			return;
-		}
-	}
 }

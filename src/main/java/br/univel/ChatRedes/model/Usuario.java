@@ -87,7 +87,6 @@ public class Usuario implements InterfaceUsuario {
 	public void receberListaParticipantes(List<EntidadeUsuario> lista) throws RemoteException {
 		Modelo.deletarModelo();
 		TabelaUsuarios.getTabelaUsuarios().getTable().setModel(Modelo.getModelo(lista));
-		Modelo.removerMeuUsuario();
 	}
 
 	/**
