@@ -9,6 +9,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import common.EntidadeUsuario;
 
@@ -33,6 +35,15 @@ public class TelaConversa extends JFrame {
 		getContentPane().setLayout(gridBagLayout);
 
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent evento) {
+				if (tabbedPane.getTabCount() == 0) {
+					dispose();
+				}
+			}
+		});
 		GridBagConstraints gbc_tabbedPane = new GridBagConstraints();
 		gbc_tabbedPane.fill = GridBagConstraints.BOTH;
 		gbc_tabbedPane.gridx = 0;
@@ -47,14 +58,11 @@ public class TelaConversa extends JFrame {
 				}
 			}
 		});
-
-		if (tabbedPane.getTabCount() == 0) {
-			dispose();
-		}
 	}
 
 	public Conversa abrirAba(EntidadeUsuario usuario) {
 		int index = -1;
+
 		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
 				tabbedPane.setSelectedIndex(i);
@@ -93,8 +101,8 @@ public class TelaConversa extends JFrame {
 	}
 
 	public static void deleteTela() {
-		if (telaConversa != null){
-			telaConversa.dispose();			
+		if (telaConversa != null) {
+			telaConversa.dispose();
 		}
 		telaConversa = null;
 		tabbedPane = null;

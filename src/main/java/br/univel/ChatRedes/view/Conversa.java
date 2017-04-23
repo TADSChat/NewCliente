@@ -134,6 +134,9 @@ public class Conversa extends JPanel {
 		});
 
 		JButton btnArquivo = new JButton("Arquivo");
+		if (destinatario.getId() == 0) {
+			btnArquivo.setEnabled(false);
+		}
 		GridBagConstraints gbc_btnArquivo = new GridBagConstraints();
 		gbc_btnArquivo.insets = new Insets(2, 3, 2, 2);
 		gbc_btnArquivo.fill = GridBagConstraints.BOTH;
