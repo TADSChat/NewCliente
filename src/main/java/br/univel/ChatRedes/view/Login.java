@@ -207,7 +207,7 @@ public class Login extends JFrame {
 				JOptionPane.showMessageDialog(null, "Usuario nao encontrado no servidor. Verifique seu email e senha!");
 				return;
 			} else {
-				new Principal();
+				Principal.getPrincipal();
 				dispose();
 			}
 

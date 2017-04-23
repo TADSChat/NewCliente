@@ -15,9 +15,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 
 import br.univel.ChatRedes.view.FileTransfer;
-import br.univel.ChatRedes.view.MeuModelo;
+import br.univel.ChatRedes.view.Modelo;
 import br.univel.ChatRedes.view.Principal;
+import br.univel.ChatRedes.view.TabelaUsuarios;
 import br.univel.ChatRedes.view.TelaConversa;
+import br.univel.ChatRedes.view.Conversa;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
 import common.InterfaceUsuario;
@@ -28,6 +30,7 @@ public class Usuario implements InterfaceUsuario {
 	private static String ipConexao = "";
 	private static Integer portaConexao = 1819;
 	private static InetAddress IP;
+	private static Modelo modelo;
 
 	public Usuario() {
 		usuario = this;
@@ -72,7 +75,7 @@ public class Usuario implements InterfaceUsuario {
 
 	@Override
 	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		TelaConversa.getTelaConversa(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
+		TelaConversa.getTelaConversa().getAba(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
 	}
 
 	@Override
@@ -82,20 +85,7 @@ public class Usuario implements InterfaceUsuario {
 
 	@Override
 	public void receberListaParticipantes(List<EntidadeUsuario> lista) throws RemoteException {
-		System.out.println("recebi a lista: " + lista.size());
-
-		DefaultListModel<EntidadeUsuario> modelo = new MeuModelo(lista);
-
-		lista.forEach(usuario -> {
-			System.out.println("adicionando usuario " + usuario.getNome());
-			if (!modelo.contains(usuario)) {
-				modelo.addElement(usuario);
-				System.out.println("usuario adicionado" + usuario.getNome());
-			}
-			;
-		});
-		System.out.println("MODELO: " + modelo);
-		Principal.getListaUsuarios().setModel(modelo);
+		TabelaUsuarios.getTabelaUsuarios().getTable().setModel(Modelo.getModelo(lista));
 	}
 
 	/**
@@ -110,6 +100,13 @@ public class Usuario implements InterfaceUsuario {
 	 */
 	public static Integer getPortaConexao() {
 		return portaConexao;
+	}
+
+	/**
+	 * @return the modelo
+	 */
+	public static Modelo getModelo() {
+		return modelo;
 	}
 
 }
