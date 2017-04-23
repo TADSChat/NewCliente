@@ -6,24 +6,19 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.rmi.RemoteException;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
 import common.EntidadeUsuario;
@@ -32,10 +27,8 @@ import common.Status;
 
 public class Principal extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+
 	private JPanel contentPane;
 	private InterfaceServidor conexaoCliente;
 	private static EntidadeUsuario usuario;
@@ -47,8 +40,15 @@ public class Principal extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("TadsZap");
 		setBounds(100, 100, 350, 600);
-
 		setUsuario(Login.getMeuUsuario());
+
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent evt) {
+				if (JOptionPane.showConfirmDialog(null, "Deseja realmente sair?") == JOptionPane.OK_OPTION) {
+					resetarCliente();
+				}
+			}
+		});
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -77,16 +77,8 @@ public class Principal extends JFrame {
 		JMenuItem mntmSair = new JMenuItem("Sair");
 		mntmSair.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					conexaoCliente.desconectarChat(usuario);
-					dispose();
-					TelaConversa.deleteTela();
-					usuario = null;
-					conexaoCliente = null;
-					new Login();
-				} catch (RemoteException e1) {
-					e1.printStackTrace();
-				}
+				resetarCliente();
+				new Login();
 			}
 		});
 		mnConexo.add(mntmSair);
@@ -154,6 +146,21 @@ public class Principal extends JFrame {
 				}
 			}
 		});
+	}
+
+	protected void resetarCliente() {
+		try {
+			conexaoCliente.desconectarChat(usuario);
+			TelaConversa.deleteTela();
+			usuario = null;
+			conexaoCliente = null;
+			principal = null;
+			Modelo.deletarModelo();
+			dispose();
+		} catch (RemoteException e) {
+			JOptionPane.showMessageDialog(null, "Erro ao se desconectar do servidor, a aplicação sera fechada!");
+			System.exit(0);
+		}
 	}
 
 	public static EntidadeUsuario getUsuario() {

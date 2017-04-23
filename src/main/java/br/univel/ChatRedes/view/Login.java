@@ -212,6 +212,7 @@ public class Login extends JFrame {
 			}
 
 		} catch (Exception e1) {
+			e1.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Erro ao se conectar ao servidor! \n" + e1.toString());
 			return;
 		}

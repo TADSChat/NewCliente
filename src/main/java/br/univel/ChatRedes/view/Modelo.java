@@ -9,9 +9,6 @@ import common.EntidadeUsuario;
 
 public class Modelo extends AbstractTableModel implements TableModel {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private static Modelo modelo;
@@ -70,6 +67,11 @@ public class Modelo extends AbstractTableModel implements TableModel {
 			modelo = new Modelo(lista);
 		}
 		return modelo;
+	}
+
+	public synchronized static void deletarModelo(){
+		listaUsuarios = null;
+		modelo = null;
 	}
 
 	/**

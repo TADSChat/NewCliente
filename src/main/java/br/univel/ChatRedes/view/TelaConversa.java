@@ -93,7 +93,9 @@ public class TelaConversa extends JFrame {
 	}
 
 	public static void deleteTela() {
-		telaConversa.dispose();
+		if (telaConversa != null){
+			telaConversa.dispose();			
+		}
 		telaConversa = null;
 		tabbedPane = null;
 	}
