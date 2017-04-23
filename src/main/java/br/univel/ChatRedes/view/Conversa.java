@@ -118,6 +118,8 @@ public class Conversa extends JPanel {
 
 		textAreaDigitar = new JTextArea();
 		textAreaDigitar.setBorder(new EmptyBorder(2, 2, 2, 2));
+		textAreaDigitar.setWrapStyleWord(true);
+		textAreaDigitar.setLineWrap(true);
 		textAreaDigitar.grabFocus();
 		textAreaDigitar.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent evento) {
