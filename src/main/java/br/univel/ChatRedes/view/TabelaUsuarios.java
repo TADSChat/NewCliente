@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JScrollPane;
 import java.awt.GridBagConstraints;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 
 import common.EntidadeUsuario;
 import common.Status;
@@ -45,8 +46,6 @@ public class TabelaUsuarios extends JPanel {
 						return;
 					}
 					TelaConversa.getTelaConversa().abrirAba(destinatario);
-
-					System.out.println(table.getColumnName(0));
 				}
 			}
 		});
@@ -75,5 +74,17 @@ public class TabelaUsuarios extends JPanel {
 		Integer linha = table.getSelectedRow();
 
 		return (EntidadeUsuario) table.getModel().getValueAt(linha, 2);
+	}
+
+	public void configurarModelo() {
+		if (table != null) {
+			table.getColumnModel().getColumn(0).setResizable(false);
+			table.getColumnModel().getColumn(0).setPreferredWidth(200);
+			table.getColumnModel().getColumn(1).setResizable(false);
+			table.getColumnModel().getColumn(1).setPreferredWidth(30);
+			table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			table.setDefaultEditor(Object.class, null);
+		}
+
 	}
 }

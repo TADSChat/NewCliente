@@ -37,6 +37,7 @@ public class Principal extends JFrame {
 	private Principal() {
 		this.conexaoCliente = Login.getConexaoCliente();
 		setVisible(true);
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("TadsZap");
 		setBounds(100, 100, 350, 600);
@@ -46,6 +47,8 @@ public class Principal extends JFrame {
 			public void windowClosing(WindowEvent evt) {
 				if (JOptionPane.showConfirmDialog(null, "Deseja realmente sair?") == JOptionPane.OK_OPTION) {
 					resetarCliente();
+				} else {
+					return;
 				}
 			}
 		});
