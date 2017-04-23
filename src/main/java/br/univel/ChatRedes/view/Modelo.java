@@ -6,6 +6,7 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import common.EntidadeUsuario;
+import common.Status;
 
 public class Modelo extends AbstractTableModel implements TableModel {
 
@@ -14,6 +15,7 @@ public class Modelo extends AbstractTableModel implements TableModel {
 	private static Modelo modelo;
 	private Object[][] matriz;
 	private int linha = 0;
+	private static int index = 0;
 
 	private static List<EntidadeUsuario> listaUsuarios;
 
@@ -24,6 +26,11 @@ public class Modelo extends AbstractTableModel implements TableModel {
 		}
 
 		listaUsuarios = lista;
+
+		EntidadeUsuario usuarioTodos = new EntidadeUsuario().setNome("Transmissão").setId(0).setEmail("TODOS")
+				.setStatus(Status.ONLINE);
+		listaUsuarios.add(0, usuarioTodos);
+
 		matriz = new Object[lista.size()][3];
 
 		for (EntidadeUsuario usuario : lista) {
@@ -33,8 +40,6 @@ public class Modelo extends AbstractTableModel implements TableModel {
 
 			linha++;
 		}
-
-		System.out.println("XASAM");
 	}
 
 	public int getColumnCount() {
@@ -69,7 +74,7 @@ public class Modelo extends AbstractTableModel implements TableModel {
 		return modelo;
 	}
 
-	public synchronized static void deletarModelo(){
+	public synchronized static void deletarModelo() {
 		listaUsuarios = null;
 		modelo = null;
 	}
@@ -79,5 +84,29 @@ public class Modelo extends AbstractTableModel implements TableModel {
 	 */
 	public static synchronized List<EntidadeUsuario> getListaUsuarios() {
 		return listaUsuarios;
+	}
+
+	public static synchronized void removerMeuUsuario() {
+		try {
+			if (Login.getMeuUsuario() != null) {
+				if (Login.getMeuUsuario().getId() != null) {
+					index = -1;
+					listaUsuarios.forEach(usuarioLista -> {
+						if (usuarioLista != null) {
+							if (usuarioLista.getId() != null) {
+								if (usuarioLista.getId().equals(Login.getMeuUsuario().getId())) {
+									index = listaUsuarios.indexOf(usuarioLista);
+								}
+							}
+						}
+					});
+					if (index >= 0) {
+						listaUsuarios.remove(index);
+					}
+				}
+			}
+		} catch (Exception e) {
+			return;
+		}
 	}
 }

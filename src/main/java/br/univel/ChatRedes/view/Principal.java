@@ -56,15 +56,13 @@ public class Principal extends JFrame {
 		JMenu mnConexo = new JMenu("Conexão");
 		menuBar.add(mnConexo);
 
-		JMenuItem mntmTransissao = new JMenuItem("Transmissão");
-		mntmTransissao.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				EntidadeUsuario userTodos = new EntidadeUsuario().setNome("Enviar a todos os Usuarios").setId(0)
-						.setEmail("TODOS");
-				TelaConversa.getTelaConversa().abrirAba(userTodos);
-			}
-		});
-		mnConexo.add(mntmTransissao);
+//		JMenuItem mntmTransissao = new JMenuItem("Transmissão");
+//		mntmTransissao.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent arg0) {
+// 				TelaConversa.getTelaConversa().abrirAba(userTodos);
+//			}
+//		});
+//		mnConexo.add(mntmTransissao);
 
 		JMenuItem mntmAlterarSenha = new JMenuItem("Alterar Senha");
 		mntmAlterarSenha.addActionListener(new ActionListener() {

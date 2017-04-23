@@ -49,15 +49,6 @@ public class TelaConversa extends JFrame {
 		gbc_tabbedPane.gridx = 0;
 		gbc_tabbedPane.gridy = 0;
 		getContentPane().add(tabbedPane, gbc_tabbedPane);
-
-		addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent evento) {
-				if (evento.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					tabbedPane.remove(tabbedPane.getSelectedIndex());
-				}
-			}
-		});
 	}
 
 	public Conversa abrirAba(EntidadeUsuario usuario) {
@@ -67,6 +58,7 @@ public class TelaConversa extends JFrame {
 			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
 				tabbedPane.setSelectedIndex(i);
 				index = i;
+				System.out.println("INDEX ACHOU: " + index + " " + usuario.getEmail());
 			}
 		}
 
@@ -76,9 +68,12 @@ public class TelaConversa extends JFrame {
 			tabbedPane.setSelectedComponent(conversa);
 			int i2 = tabbedPane.getSelectedIndex();
 			tabbedPane.setTabComponentAt(i2, new JButtonTabbedPane(tabbedPane));
-			index = tabbedPane.getTabCount() - 1;
+			tabbedPane.setSelectedComponent(conversa);
+			index = tabbedPane.getSelectedIndex();
+			System.out.println("INDEX NAO ACHOU: " + index);
 		}
 
+		System.out.println("tiTULO RETORNADO: " + tabbedPane.getTitleAt(index));
 		return (Conversa) tabbedPane.getComponentAt(index);
 	}
 

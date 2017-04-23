@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -116,6 +118,15 @@ public class Conversa extends JPanel {
 
 		textAreaDigitar = new JTextArea();
 		textAreaDigitar.setBorder(new EmptyBorder(2, 2, 2, 2));
+		textAreaDigitar.grabFocus();
+		textAreaDigitar.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent evento) {
+				if (evento.getKeyCode() == KeyEvent.VK_ENTER) {
+					enviarMensagem();
+				}
+			}
+		 });
+
 		scrollPaneDigitar.setViewportView(textAreaDigitar);
 
 		JButton btnEnviar = new JButton("Enviar");
@@ -127,9 +138,7 @@ public class Conversa extends JPanel {
 		painelDigitar.add(btnEnviar, gbc_btnEnviar);
 		btnEnviar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				if (!textAreaDigitar.getText().equals("")) {
-					enviarMensagem();
-				}
+				enviarMensagem();
 			}
 		});
 
@@ -149,14 +158,6 @@ public class Conversa extends JPanel {
 			}
 		});
 
-		this.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent evento) {
-				if (evento.getKeyCode() == KeyEvent.VK_ESCAPE) {
-					TelaConversa.getTabbedPane().remove(conversa);
-				}
-			}
-		});
 		conversa = this;
 	}
 
@@ -166,6 +167,10 @@ public class Conversa extends JPanel {
 	}
 
 	public void enviarMensagem() {
+		if (textAreaDigitar.getText().trim().equals("")) {
+			return;
+		}
+
 		if (destinatario.getId() == 0) {
 			try {
 				Login.getConexaoCliente().enviarMensagem(Login.getMeuUsuario(), textAreaDigitar.getText());
