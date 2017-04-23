@@ -1,10 +1,17 @@
 package br.univel.ChatRedes.view;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import javax.swing.JScrollPane;
 import java.awt.GridBagConstraints;
 import javax.swing.JTable;
+
+import common.EntidadeUsuario;
+import common.Status;
 
 public class TabelaUsuarios extends JPanel {
 
@@ -30,6 +37,19 @@ public class TabelaUsuarios extends JPanel {
 
 		table = new JTable();
 		scrollPane.setViewportView(table);
+		table.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2) {
+					EntidadeUsuario destinatario = getUsuarioTabela();
+					if (destinatario == null) {
+						return;
+					}
+					TelaConversa.getTelaConversa().abrirAba(destinatario);
+
+					System.out.println(table.getColumnName(0));
+				}
+			}
+		});
 	}
 
 	public static TabelaUsuarios getTabelaUsuarios() {
@@ -44,5 +64,16 @@ public class TabelaUsuarios extends JPanel {
 	 */
 	public static synchronized JTable getTable() {
 		return table;
+	}
+
+	private EntidadeUsuario getUsuarioTabela() {
+		if (table.getSelectedRow() < 0) {
+			JOptionPane.showMessageDialog(null, "Nenhum usuario foi selecionado!");
+			return null;
+		}
+
+		Integer linha = table.getSelectedRow();
+
+		return (EntidadeUsuario) table.getModel().getValueAt(linha, 2);
 	}
 }

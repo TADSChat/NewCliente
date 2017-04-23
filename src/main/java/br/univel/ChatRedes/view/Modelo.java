@@ -38,7 +38,7 @@ public class Modelo extends AbstractTableModel implements TableModel {
 		matriz = new Object[lista.size()][3];
 
 		for (EntidadeUsuario usuario : lista) {
-			matriz[linha][0] = usuario.getNome();
+			matriz[linha][0] = usuario.getEmail();
 			matriz[linha][1] = usuario.getStatus();
 			matriz[linha][2] = usuario;
 
@@ -61,7 +61,7 @@ public class Modelo extends AbstractTableModel implements TableModel {
 	public String getColumnName(int i) {
 		switch (i) {
 		case 0:
-			return "Nome";
+			return "Email";
 		case 1:
 			return "Status";
 		}
