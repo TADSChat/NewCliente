@@ -12,17 +12,18 @@ public class JTextPaneConversa extends JTextPane {
 
 	private static final long serialVersionUID = 1L;
 
-	public void append(Color c, String s) {
+	public void append(Color cor, String string) {
 
-		StyleContext sc = StyleContext.getDefaultStyleContext();
-		AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, c);
+		StyleContext styleContext = StyleContext.getDefaultStyleContext();
+		
+		AttributeSet attributeSet = styleContext.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, cor);
 
-		int len = getDocument().getLength();
+		Integer length = getDocument().getLength();
 
-		setCaretPosition(len);
-		setCharacterAttributes(aset, false);
+		setCaretPosition(length);
+		setCharacterAttributes(attributeSet, false);
 
-		replaceSelection(s.concat("\n"));
+		replaceSelection(string);
 	}
 
 }
