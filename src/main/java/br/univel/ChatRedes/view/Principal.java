@@ -138,7 +138,7 @@ public class Principal extends JFrame {
 		});
 	}
 
-	protected void resetarCliente() {
+	public void resetarCliente() {
 		try {
 			conexaoCliente.desconectarChat(usuario);
 			TelaConversa.deleteTela();

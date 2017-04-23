@@ -110,4 +110,10 @@ public class Usuario implements InterfaceUsuario {
 		return modelo;
 	}
 
+	@Override
+	public void desconectarForcado() throws RemoteException {
+		JOptionPane.showMessageDialog(null, "Voce foi desconectado do servidor! Reinicie a aplicação.");
+		System.exit(0);
+	}
+
 }
