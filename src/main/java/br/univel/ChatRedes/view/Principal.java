@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 
+import br.univel.ChatRedes.model.Usuario;
 import common.EntidadeUsuario;
 import common.InterfaceServidor;
 import common.Status;
@@ -63,7 +64,9 @@ public class Principal extends JFrame {
 		JMenuItem mntmTransissao = new JMenuItem("Transmissão");
 		mntmTransissao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new Transmissao(conexaoCliente, usuario).setVisible(true);
+				EntidadeUsuario userTodos = new EntidadeUsuario();
+				userTodos.setNome("Enviar a todos os Usuarios");
+				TelaConversa.getTelaConversa(userTodos);
 			}
 		});
 		mnConexo.add(mntmTransissao);
