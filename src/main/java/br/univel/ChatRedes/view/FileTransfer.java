@@ -37,10 +37,11 @@ public class FileTransfer extends JFrame {
 	 * Create the frame.
 	 */
 	public FileTransfer(EntidadeUsuario remetente, File arquivo, byte[] bytes) {
+		setResizable(false);
 
 		setVisible(true);
 		setTitle("Arquivo");
-		setSize(420, 220);
+		setSize(453, 230);
 		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
 		
 		contentPane = new JPanel();
