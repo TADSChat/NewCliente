@@ -47,7 +47,7 @@ public class Principal extends JFrame {
 			public void windowClosing(WindowEvent evt) {
 				int dialogButton = JOptionPane.YES_NO_OPTION;
 				int resposta = JOptionPane.showConfirmDialog(null,
-						String.format("Deseja realmente sair?", usuario.getNome()), "Atenção", dialogButton);
+						String.format("Deseja realmente sair %s?", usuario.getNome()), "Atenção", dialogButton);
 
 				if (resposta == JOptionPane.YES_OPTION) {
 					resetarCliente();
