@@ -1,7 +1,10 @@
 package br.univel.ChatRedes.view;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -16,6 +19,8 @@ public class TelaConversa extends JFrame {
 
 	private static TelaConversa telaConversa;
 	private static JTabbedPane tabbedPane;
+	
+	private Map<String, Conversa> conversas;
 
 	public TelaConversa() {
 		setVisible(true);
@@ -45,29 +50,42 @@ public class TelaConversa extends JFrame {
 		gbc_tabbedPane.gridx = 0;
 		gbc_tabbedPane.gridy = 0;
 		getContentPane().add(tabbedPane, gbc_tabbedPane);
+		
+		conversas = new HashMap<String, Conversa>();
 	}
 
 	public Conversa abrirAba(EntidadeUsuario usuario) {
-		int index = -1;
 
 		
-		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
-			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
-				tabbedPane.setSelectedIndex(i);
-				index = i;
+//		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+//			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
+//				tabbedPane.setSelectedIndex(i);
+//				return (Conversa) tabbedPane.getSelectedComponent();
+//			}
+//		}
+		
+		if(conversas.containsKey(usuario.getEmail())){
+			Conversa atual = conversas.get(usuario.getEmail());
+			for (int i = 0; i < tabbedPane.getTabCount(); i++) {
+				if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
+					tabbedPane.setSelectedComponent(atual);
+					return atual;
+				}
 			}
+			conversas.remove(usuario.getEmail());
 		}
 
-		if (index < 0) {
-			Conversa conversa = new Conversa(usuario);
-			tabbedPane.add(usuario.getEmail(), conversa);
-			tabbedPane.setSelectedComponent(conversa);
-			index = tabbedPane.getSelectedIndex();
-			tabbedPane.setTabComponentAt(index, new JButtonTabbedPane(tabbedPane));
-		}
+		Conversa conversa = new Conversa(usuario);
+		tabbedPane.add(usuario.getEmail(), conversa);
+		conversas.put(usuario.getEmail(), conversa);
+		tabbedPane.setSelectedComponent(conversa);
+		int index = tabbedPane.getSelectedIndex();
+		tabbedPane.setTabComponentAt(index, new JButtonTabbedPane(tabbedPane));
 
-		return (Conversa) tabbedPane.getComponentAt(index);
+		return conversa;
 	}
+	
+	
 
 	/**
 	 * @return the telaConversa

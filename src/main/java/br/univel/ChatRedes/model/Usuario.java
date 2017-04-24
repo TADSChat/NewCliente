@@ -3,8 +3,6 @@ package br.univel.ChatRedes.model;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -25,6 +23,8 @@ import br.univel.ChatRedes.view.TabelaUsuarios;
 import br.univel.ChatRedes.view.TelaConversa;
 import common.EntidadeUsuario;
 import common.InterfaceUsuario;
+import common.Status;
+import common.TipoMensagem;
 
 public class Usuario implements InterfaceUsuario {
 
@@ -33,9 +33,11 @@ public class Usuario implements InterfaceUsuario {
 	private static Integer portaConexao = 1819;
 	private static InetAddress IP;
 	private static Modelo modelo;
+	private EntidadeUsuario todos;
 
 	public Usuario() {
 		usuario = this;
+		todos = new EntidadeUsuario().setNome("Transmissão").setId(0).setEmail("TODOS").setStatus(Status.ONLINE);
 	}
 
 	public static void exportar() {
@@ -77,8 +79,12 @@ public class Usuario implements InterfaceUsuario {
 
 	@SuppressWarnings("static-access")
 	@Override
-	public void receberMensagem(EntidadeUsuario remetente, String mensagem) throws RemoteException {
-		TelaConversa.getTelaConversa().abrirAba(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
+	public void receberMensagem(EntidadeUsuario remetente, TipoMensagem tipoMensagem, String mensagem) throws RemoteException {
+		if(tipoMensagem == TipoMensagem.PRIVADA){
+			TelaConversa.getTelaConversa().abrirAba(remetente).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
+		}else{
+			TelaConversa.getTelaConversa().abrirAba(todos).mostrarMensagem(remetente.getNome(), mensagem, Color.BLUE);
+		}
 	}
 
 	@Override

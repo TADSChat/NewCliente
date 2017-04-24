@@ -34,8 +34,8 @@ public class Conversa extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JTextArea textAreaDigitar;
-	private static JTextPaneConversa painelConversa;
-	private static EntidadeUsuario destinatario;
+	private JTextPaneConversa painelConversa;
+	private EntidadeUsuario destinatario;
 	@SuppressWarnings("unused")
 	private Conversa conversa;
 
@@ -168,7 +168,7 @@ public class Conversa extends JPanel {
 		conversa = this;
 	}
 
-	public static void mostrarMensagem(String remetente, String mensagem, Color cor) {
+	public void mostrarMensagem(String remetente, String mensagem, Color cor) {
 		painelConversa.append(cor, getCabecalho(remetente));
 		painelConversa.append(Color.BLACK, mensagem + "\n");
 	}
