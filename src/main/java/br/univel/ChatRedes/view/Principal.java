@@ -137,8 +137,8 @@ public class Principal extends JFrame {
 					usuario.setStatus(Status.valueOf(CBStatus.getSelectedItem().toString()));
 					conexaoCliente.atualizarStatus(usuario);
 				} catch (RemoteException e) {
-					JOptionPane.showMessageDialog(null,
-							"Erro ao atualizar status, verifique sua conexão e tente novamente!");
+					String mensagem[] = e.getCause().toString().split(":");
+					JOptionPane.showMessageDialog(null, "Erro ao atualizar status! \n" + mensagem[1]);
 					return;
 				}
 			}
@@ -155,7 +155,9 @@ public class Principal extends JFrame {
 			Modelo.deletarModelo();
 			dispose();
 		} catch (RemoteException e) {
-			JOptionPane.showMessageDialog(null, "Erro ao se desconectar do servidor, a aplicação sera fechada!");
+			String mensagem[] = e.getCause().toString().split(":");
+			JOptionPane.showMessageDialog(null,
+					"Erro ao se desconectar do servidor, a aplicação sera fechada! \n" + mensagem[1]);
 			System.exit(0);
 		}
 	}

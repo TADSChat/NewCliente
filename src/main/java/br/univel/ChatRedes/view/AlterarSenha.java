@@ -148,8 +148,9 @@ public class AlterarSenha extends JFrame {
 						return;
 					}
 				} catch (RemoteException e) {
+					String mensagem[] = e.getCause().toString().split(":");
 					JOptionPane.showMessageDialog(null,
-							"Erro ao atualizar senha, verifique sua conexão e tente novamente!");
+							"Erro ao atualizar senha! \n " + mensagem[1]);
 					return;
 				}
 
