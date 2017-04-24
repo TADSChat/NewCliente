@@ -1,6 +1,10 @@
 package br.univel.ChatRedes.model;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -11,14 +15,15 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 import br.univel.ChatRedes.view.FileTransfer;
 import br.univel.ChatRedes.view.Modelo;
 import br.univel.ChatRedes.view.TabelaUsuarios;
 import br.univel.ChatRedes.view.TelaConversa;
 import common.EntidadeUsuario;
-import common.InterfaceServidor;
 import common.InterfaceUsuario;
 
 public class Usuario implements InterfaceUsuario {
@@ -112,7 +117,20 @@ public class Usuario implements InterfaceUsuario {
 
 	@Override
 	public void desconectarForcado() throws RemoteException {
-		JOptionPane.showMessageDialog(null, "Voce foi desconectado do servidor! Reinicie a aplicação");
+		JOptionPane pane = new JOptionPane("Voce foi desconectado do servidor! Reinicie a aplicação...",
+				JOptionPane.INFORMATION_MESSAGE);
+		JDialog dialog = pane.createDialog(null, "ATENÇÃO!");
+
+		dialog.setModal(true);
+		Timer timer = new Timer(3000, new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				dialog.dispose();
+			}
+		});
+		timer.setRepeats(false);
+		timer.start();
+		dialog.setVisible(true);
+		timer.stop();
 		System.exit(0);
 	}
 
