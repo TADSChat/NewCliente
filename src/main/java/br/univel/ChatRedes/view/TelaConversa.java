@@ -50,6 +50,7 @@ public class TelaConversa extends JFrame {
 	public Conversa abrirAba(EntidadeUsuario usuario) {
 		int index = -1;
 
+		
 		for (int i = 0; i < tabbedPane.getTabCount(); i++) {
 			if (tabbedPane.getTitleAt(i).equals(usuario.getEmail())) {
 				tabbedPane.setSelectedIndex(i);
@@ -61,10 +62,8 @@ public class TelaConversa extends JFrame {
 			Conversa conversa = new Conversa(usuario);
 			tabbedPane.add(usuario.getEmail(), conversa);
 			tabbedPane.setSelectedComponent(conversa);
-			int i2 = tabbedPane.getSelectedIndex();
-			tabbedPane.setTabComponentAt(i2, new JButtonTabbedPane(tabbedPane));
-			tabbedPane.setSelectedComponent(conversa);
 			index = tabbedPane.getSelectedIndex();
+			tabbedPane.setTabComponentAt(index, new JButtonTabbedPane(tabbedPane));
 		}
 
 		return (Conversa) tabbedPane.getComponentAt(index);
