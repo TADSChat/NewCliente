@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
+import java.net.SocketException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -122,21 +123,7 @@ public class Usuario implements InterfaceUsuario {
 	}
 
 	@Override
-	public void desconectarForcado() throws RemoteException {
-		JOptionPane pane = new JOptionPane("Voce foi desconectado do servidor! Reinicie a aplicação...",
-				JOptionPane.INFORMATION_MESSAGE);
-		JDialog dialog = pane.createDialog(null, "ATENÇÃO!");
-
-		dialog.setModal(true);
-		Timer timer = new Timer(3000, new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				dialog.dispose();
-			}
-		});
-		timer.setRepeats(false);
-		timer.start();
-		dialog.setVisible(true);
-		timer.stop();
+	public synchronized void desconectarForcado() throws RemoteException, SocketException {
 		System.exit(0);
 	}
 
