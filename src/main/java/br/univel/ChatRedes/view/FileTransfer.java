@@ -40,7 +40,7 @@ public class FileTransfer extends JFrame {
 
 		setVisible(true);
 		setTitle("Arquivo");
-		setSize(420, 260);
+		setSize(420, 220);
 		setLocation((dimensaoTela.width - this.getSize().width) / 2, (dimensaoTela.height - this.getSize().height) / 2);
 		
 		contentPane = new JPanel();
@@ -52,7 +52,7 @@ public class FileTransfer extends JFrame {
 		gbl_contentPane.columnWidths = new int[] { 130, 130, 221, 0 };
 		gbl_contentPane.rowHeights = new int[] { 0, 0, 0, 0, 0 };
 		gbl_contentPane.columnWeights = new double[] { 0.0, 0.0, 1.0, Double.MIN_VALUE };
-		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_contentPane.rowWeights = new double[] { 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE };
 		contentPane.setLayout(gbl_contentPane);
 
 		JLabel lblDesejaReceberEste = new JLabel("Remetente:");
@@ -75,7 +75,7 @@ public class FileTransfer extends JFrame {
 		gbc_lblRemetente.gridy = 0;
 		contentPane.add(lblRemetente, gbc_lblRemetente);
 
-		JLabel lblNomeDoArquivo = new JLabel("Nome do Arquivo:");
+		JLabel lblNomeDoArquivo = new JLabel("Arquivo:");
 		lblNomeDoArquivo.setFont(new Font("Yu Gothic UI Semilight", Font.PLAIN, 15));
 		GridBagConstraints gbc_lblNomeDoArquivo = new GridBagConstraints();
 		gbc_lblNomeDoArquivo.insets = new Insets(5, 0, 0, 5);
