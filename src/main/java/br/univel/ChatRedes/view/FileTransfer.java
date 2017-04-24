@@ -10,6 +10,10 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -32,7 +36,7 @@ public class FileTransfer extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public FileTransfer(EntidadeUsuario remetente, File arquivo) {
+	public FileTransfer(EntidadeUsuario remetente, File arquivo, byte[] bytes) {
 
 		setVisible(true);
 		setTitle("File Transfer");
@@ -110,12 +114,11 @@ public class FileTransfer extends JFrame {
 				}
 
 				File novoArquivo = new File(path + File.separator + arquivo.getName());
-
 				try {
-					novoArquivo.createNewFile();
-				} catch (Exception e1) {
+					Files.write(Paths.get(novoArquivo.getPath()), bytes, StandardOpenOption.CREATE);
+				} catch (IOException exception) {
 					JOptionPane.showMessageDialog(null,
-							String.format("Erro ao criar o arquivo [%s]! \n%s", arquivo.getName(), e1.toString()));
+							String.format("Erro ao criar o arquivo [%s]! \n%s", arquivo.getName(), exception.getCause().toString()));
 					return;
 				}
 
@@ -150,5 +153,4 @@ public class FileTransfer extends JFrame {
 		gbc_btnRecusar.gridy = 3;
 		contentPane.add(btnRecusar, gbc_btnRecusar);
 	}
-
 }

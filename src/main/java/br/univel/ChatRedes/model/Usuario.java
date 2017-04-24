@@ -35,9 +35,9 @@ public class Usuario implements InterfaceUsuario {
 
 	public static void exportar() {
 		try {
-			InterfaceUsuario interfaceU = (InterfaceUsuario) UnicastRemoteObject.exportObject(usuario, 0);
+			InterfaceUsuario interfaceUsuario = (InterfaceUsuario) UnicastRemoteObject.exportObject(usuario, 0);
 			Registry registry = LocateRegistry.createRegistry(getPorta());
-			registry.rebind(InterfaceServidor.NOME, interfaceU);
+			registry.rebind(InterfaceUsuario.NOME, interfaceUsuario);
 		} catch (RemoteException e) {
 			JOptionPane.showMessageDialog(null, "Erro ao exportar registro para o servidor, reinicie o programa!");
 			return;
@@ -77,8 +77,8 @@ public class Usuario implements InterfaceUsuario {
 	}
 
 	@Override
-	public void receberArquivo(EntidadeUsuario remetente, File arquivo) throws RemoteException {
-		new FileTransfer(remetente, arquivo);
+	public void receberArquivo(EntidadeUsuario remetente, File arquivo, byte[] bytes) throws RemoteException {
+		new FileTransfer(remetente, arquivo, bytes);
 	}
 
 	@SuppressWarnings("static-access")

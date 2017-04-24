@@ -10,6 +10,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -19,6 +23,7 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -203,17 +208,16 @@ public class Conversa extends JPanel {
 		arquivo.showSaveDialog(null);
 		if (arquivo.getSelectedFile() != null) {
 			try {
+				Path path = Paths.get(arquivo.getSelectedFile().getPath());
+				byte[] dados = Files.readAllBytes(path);
 				Registry registry = LocateRegistry.getRegistry(destinatario.getIpConexao(),
 						destinatario.getPortaConexao());
-				@SuppressWarnings("unused")
 				InterfaceUsuario conexaoCliente = (InterfaceUsuario) registry.lookup(InterfaceUsuario.NOME);
 
-				Login.getConexaoCliente().enviarArquivo(Login.getMeuUsuario(), destinatario, arquivo.getSelectedFile());
-			} catch (RemoteException e) {
+				conexaoCliente.receberArquivo(destinatario, arquivo.getSelectedFile(), dados);
+			} catch (Exception e) {
 				e.printStackTrace();
-			} catch (NotBoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Erro ao enviar arquivo ao cliente!");
 			}
 		}
 	}
