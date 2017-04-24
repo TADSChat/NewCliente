@@ -115,7 +115,7 @@ public class Login extends JFrame {
 		painelPrincipal.add(lblServidor, gbc_lblServidor);
 
 		field_servidor = new JTextField();
-		field_servidor.setText("192.168.25.10");
+		field_servidor.setText("");
 		GridBagConstraints gbc_field_servidor = new GridBagConstraints();
 		gbc_field_servidor.anchor = GridBagConstraints.NORTH;
 		gbc_field_servidor.insets = new Insets(5, 0, 5, 0);
@@ -134,7 +134,7 @@ public class Login extends JFrame {
 		painelPrincipal.add(lblSenha_1, gbc_lblSenha_1);
 
 		field_porta = new JNumberField();
-		field_porta.setText("1818");
+		field_porta.setText("");
 		GridBagConstraints gbc_field_porta = new GridBagConstraints();
 		gbc_field_porta.fill = GridBagConstraints.HORIZONTAL;
 		gbc_field_porta.anchor = GridBagConstraints.NORTH;

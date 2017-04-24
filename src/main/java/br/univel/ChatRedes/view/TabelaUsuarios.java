@@ -43,7 +43,12 @@ public class TabelaUsuarios extends JPanel {
 					EntidadeUsuario destinatario = getUsuarioTabela();
 					if (destinatario == null) {
 						return;
+					} 
+					
+					if (destinatario.getId().equals(Login.getMeuUsuario().getId())){
+						return;
 					}
+					
 					TelaConversa.getTelaConversa().abrirAba(destinatario);
 				}
 			}
