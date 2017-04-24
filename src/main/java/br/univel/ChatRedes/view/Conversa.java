@@ -29,6 +29,7 @@ import javax.swing.border.EmptyBorder;
 
 import common.EntidadeUsuario;
 import common.InterfaceUsuario;
+import javax.swing.ScrollPaneConstants;
 
 public class Conversa extends JPanel {
 
@@ -123,13 +124,13 @@ public class Conversa extends JPanel {
 
 		textAreaDigitar = new JTextArea();
 		textAreaDigitar.setBorder(new EmptyBorder(2, 2, 2, 2));
-		textAreaDigitar.setWrapStyleWord(true);
-		textAreaDigitar.setLineWrap(true);
 		textAreaDigitar.grabFocus();
 		textAreaDigitar.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent evento) {
 				if (evento.getKeyCode() == KeyEvent.VK_ENTER) {
+					evento.consume();
 					enviarMensagem();
+					return;
 				}
 			}
 		 });
