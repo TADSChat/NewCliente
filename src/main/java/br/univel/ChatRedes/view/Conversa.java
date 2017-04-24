@@ -59,6 +59,7 @@ public class Conversa extends JPanel {
 		gbc_txAreaConversa.gridwidth = 2;
 		gbc_txAreaConversa.gridx = 0;
 		gbc_txAreaConversa.gridy = 0;
+		
 		JPanel panelConversa = new JPanel();
 		panelConversa.setBorder(new EmptyBorder(5, 5, 0, 5));
 		GridBagConstraints gbc_panelConversa = new GridBagConstraints();
@@ -67,6 +68,7 @@ public class Conversa extends JPanel {
 		gbc_panelConversa.gridx = 0;
 		gbc_panelConversa.gridy = 0;
 		this.add(panelConversa, gbc_panelConversa);
+		
 		GridBagLayout gbl_panelConversa = new GridBagLayout();
 		gbl_panelConversa.columnWidths = new int[] { 282, 0 };
 		gbl_panelConversa.rowHeights = new int[] { 24, 0 };
@@ -215,7 +217,7 @@ public class Conversa extends JPanel {
 						destinatario.getPortaConexao());
 				InterfaceUsuario conexaoCliente = (InterfaceUsuario) registry.lookup(InterfaceUsuario.NOME);
 
-				conexaoCliente.receberArquivo(destinatario, arquivo.getSelectedFile(), dados);
+				conexaoCliente.receberArquivo(Login.getMeuUsuario(), arquivo.getSelectedFile(), dados);
 			} catch (Exception e) {
 				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, "Erro ao enviar arquivo ao cliente!");
