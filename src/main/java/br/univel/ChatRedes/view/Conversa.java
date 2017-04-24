@@ -10,11 +10,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -182,15 +180,18 @@ public class Conversa extends JPanel {
 			try {
 				Login.getConexaoCliente().enviarMensagem(Login.getMeuUsuario(), textAreaDigitar.getText());
 			} catch (RemoteException e) {
-				e.printStackTrace();
+				String mensagem[] = e.getCause().toString().split(":");
+				JOptionPane.showMessageDialog(null, "Erro ao enviar mensagem para todos! \n " + mensagem[1]);
+				TelaConversa.getTabbedPane().remove(this);
 			}
-
 		} else {
 			try {
 				Login.getConexaoCliente().enviarMensagem(Login.getMeuUsuario(), destinatario,
 						textAreaDigitar.getText());
 			} catch (RemoteException e) {
-				e.printStackTrace();
+				String mensagem[] = e.getCause().toString().split(":");
+				JOptionPane.showMessageDialog(null, "Erro ao enviar mensagem para o destinatario! \n " + mensagem[1]);
+				TelaConversa.getTabbedPane().remove(this);
 			}
 		}
 
